@@ -2,10 +2,10 @@
 title: "Server: Reactive programming"
 ---
 
-- Learning outcomes:
-  - Understand logic underlying reactivity in Shiny apps
-  - Become familiar with difference reactive functions such as `reactive()` or `observe()`
-  - Explore reactivity in the Guerry app focusing on the *Tabulate data* tab
+- จุดประสงค์:
+  - เข้าใจตรรกะของ reactivity ใน Shiny apps
+  - เข้าใจความแต่กต่างของ reactive functions อย่างเช่น `reactive()` หรือ `observe()`
+  - ดูเรื่อง reactivity ใน Guerry app โดยเฉพาะในส่วนของ *Tabulate data* tab
 
 Sources: @wickham2021mastering [Ch. 3]
 
@@ -19,16 +19,15 @@ pacman::p_load(knitr, quarto, tidyverse, flair)
 
 
 
+## พื้นฐาน
+- ใน Shiny ตรรกะของ server ถูกเขียนโดยใช้รูปแบบที่เรียกว่า **reactive programming**
+- ซึ่งมันจะต่างจากเขียน code ที่รันให้ทำอะไรตั้งแต่ต้นจนจบ
+- **ไอเดียสำคัญ**: เมื่อ inputs ของส่วนที่สนใจเปลี่ยน outputs ที่เกี่ยวข้องก็จะเปลี่ยนตามเองอัตโนมัติ
+- **Reactive programming** ช่วยให้เขียน code ได้ง่ายขึ้น (เขาว่ามา...ไม่รู้จริงหรือเปล่า)
 
-## Basics
-- In Shiny, server logic is expressed using **reactive programming** (*elegant powerful programming paradigm!*)
-- Very different to writing script that runs from start to end
-- **Key idea**: specify a graph of dependencies so that when an input changes, all related outputs are automatically updated
-- **Reactive programming** makes flow of an app considerably simpler
 
-
-## The server function
-- "Guts" of every shiny app below
+## server function
+- หัวใจหลักของทุกๆ shiny app 
 
 ```{r 04-server-reactive-programming-2, echo=TRUE, eval=FALSE}
 library(shiny)
@@ -45,23 +44,22 @@ shinyApp(ui, server)
 1. User interface
 2. Server
 
-- `ui` simple because every user gets same html
-- `server` more complicated because every user needs independent version of the app
-  - e.g., Julia using slider should not affect Petra ui!
-- `server()` is invoked each time new session starts
-  - 3 parameters (`input`, `output`, `session`) that are created by Shiny (not by us!) when session starts  connecting to specific session
-
+- `ui` ง่ายเพราะผู้ใช้ทุกคนจะได้ code html เดียวกัน
+- `server` ค่อนข้างซับซ้อน เพราะแต่ล่ะคนที่ใช้จะไม่เหมือนกัน
+  - เช่น ส้มกำลังใช้งาน slider ก็ไม่ควรจะไปมีผลอะไรกับการใช้งานของสมภพ 
+- `server()` จะถูกเรียกทุกครั้งที่เริ่มใช้งาน
+  - ตัวแปร 3 ตัวนี้ (`input`, `output`, `session`) ที่จะถูกสร้างอัตโนมัติโดย Shiny app เมื่อเริ่มต้นใช้งาน
 
 
 ## Input & output (lists)
-- `input`: a list-like object that contains all the **input data sent from the browser**, named according to the **input ID**
-  - e.g., `numericInput("count", label = "Number of values", value = 100)` generates `input$count`
-  - `input` can only be read from within reactive contexts created by a **reactive functions** like `renderText()` or `reactive()`
-    - **reactive functions** allow for outputs to automatically update when an input changes
+- `input`: เป็นตัวแปรแบบ list ที่จะรับ **input ทุกตัวที่ส่งมาจาก browser** โดย input ที่มาจะมีชื่อตาม **input ID**
+  - เช่น `numericInput("count", label = "Number of values", value = 100)` จะสร้าง `input$count`
+  - `input` สามารถอ่านค่าได้จากภายใน **reactive functions** อย่าง `renderText()` หรือ `reactive()`
+    - **reactive functions** ทำให้ค่า outputs เปลี่ยนอัตโนมัติเมื่อ input เปลี่ยน
 
-- `output`: a list-like object containing outputs named according to `output ID`
-  - **Difference**: `output` used for sending output instead of receiving `input` (always in concert with **render function** as below)
-  - Q: How many inputs/outputs/render functions are there in the code below? What does it do?
+- `output`: เป็นตัวแปรแบบ list ที่ประกอบด้วย outputs ตามชื่อ `output ID`
+  - **ความแต่กต่าง**: `output` ใช้สำหรับส่งค่า output แทนที่จะรับ `input` (ส่วนใหญ่จะเป็นพวก **render function**)
+  - Q: ใน code ด้านล่างนี้มี inputs/outputs/render functions กี่ที่ และมันทำหน้าที่อะไร
   
 ```{r 04-server-reactive-programming-3, echo=TRUE, eval=FALSE}
 #| code-fold: true
@@ -79,17 +77,16 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-1. render functions, e.g., `renderText()` set up special reactive context that automatically tracks what inputs the output uses AND converts output of R code into HTML suitable for display on a web page
-
+1. render functions อย่าง `renderText()` ทำหน้าที่ convert ผลลัพธ์เป็น HTML ให้ตรงตามที่ต้องการบนหน้า web page 
 
 
 
 
 ## Render functions
 
-- **render functions**, located in `server`, wrap generated outputs and correspond to the type or reactive output
-  - resulting values are stored in `output$...` list
-- Q: What do you think are the following render functions used for? (e.g., )
+- **render functions** จะอยู่ในส่วนของ `server` ทำหน้าที่สร้างหรือคอยอัพเดท outputs ตามชนิดที่ต้องการ
+  - ค่าผลลัพธ์จะถูกเก็บไว้ที่  `output$...`
+- Q: render functions พวกนี้ใช้ทำอะไร
   - `renderImage({...})`
   - `renderPlot({...})`
   - `renderPlotly({...})` (!)
@@ -100,29 +97,29 @@ shinyApp(ui, server)
   - `renderUI({...})` (!)
   - `renderLeaflet({...})` (!)
 
-- Our Guerry app uses those marked with  (!).
+- พวกที่มีเครื่องหมาย(!) คืออันที่เราใช้ใน Guerry app
 
 ::: {.callout-warning collapse="true"}
 
 #### Solution
 
-- `renderImage({...})` creates images (saved as a link to a source file)
-- `renderPlot({...})` creates plots
-- `renderPlotly({...})` creates interactive plotly graph
-- `renderPrint({...})` creates any printed output
-- `renderTable({...})` creates data frame, matrix, other table like structures
-  - `renderDataTable({...})` creates interactive datatable
-- `renderText({...})` creates character strings
-- `renderUI({...})` creates a Shiny tag object or HTML
-- `renderLeaflet({...})` create a leaflet map
+- `renderImage({...})` สร้าง output แบบ images
+- `renderPlot({...})` สร้าง plots
+- `renderPlotly({...})` สร้าง interactive plotly กราฟต่างๆ
+- `renderPrint({...})` สำหรับ output จากคำสั่ง print
+- `renderTable({...})` สำหรับ data frame, matrix, หรือพวกตารางต่างๆ
+  - `renderDataTable({...})` สร้าง interactive datatable
+- `renderText({...})` สำหรับแสดงข้อความ
+- `renderUI({...})` สร้างพวก UI
+- `renderLeaflet({...})` สร้างแผนที่ leaflet 
 
 :::
 
 
 ## Reactive programming 
-### How does reactivity work? {#sec-name-app}
+### reactivity มันทำงานอย่างไร {#sec-name-app}
 
-- Q: How does reactivity work? What does the app below do? (Let's run it too!)
+- Q: reactivity มันทำงานอย่างไร และ app ด้านล่างนี้มันทำอะไร
 
 ```{r 04-server-reactive-programming-4, echo=TRUE, eval=FALSE}
 ui <- fluidPage(
@@ -138,42 +135,41 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-- Shiny performs the `renderText()` action every time we update `input$name` (automatically!)
-- **reactive** refers to any expression that automatically updates itself when its dependencies change
-- **Important**: Code informs Shiny how it could create the string if it needs to, but it's up to Shiny when (and even if!) the code should be run
-- **Recipe**: App provides Shiny with **recipe** (not commands) what to do with inputs
+- Shiny จะทำการแสดงผล `renderText()` ทุกครั้งที่เราอัพเดทค่า `input$name`
+- **reactive** หมายถึงตัวมันเองจะเปลี่ยนเองอัตโนมัติ เมื่อค่าที่มันเกี่ยวข้องมีการเปลี่ยนแปลง
+- **Important**: Code เป็นเพียงตัวบอกว่ามันจะสร้างข้อความอย่างไร แต่มันขึ้นกับตัว Shiny เองว่าจะรัน code เมื่อไหร่ตอนไหน
+- **Recipe**: App เป็นเพียงตัวที่บอก Shiny ว่าจะทำอะไร อย่างไรกับ inputs
 
 
 
-### The reactive graph
-- Usually R code can be read from top to bottom (= order of execution)... not in Shiny!
-- **Reactive graph**: describes how inputs and outputs are connected to understand order of execution
-- @fig-graph-simple describes app in @sec-name-app above.
-  - tells that `output$greeting` will need to be recomputed whenever `input$name` is changed
-  - `greeting` has a reactive dependency on `name`
+### Reactive Graph
+- โดยปกติเราจะอ่าน R code  จากบนลงล่าง(= ตามลำดับคำสั่ง)... แต่ไม่ใช่กับ Shiny!
+- **Reactive graph**: เป็นตัวอธิบายว่า inputs และ outputs มันเชื่อมต่อกันเพื่อรันคำสั่งตามลำดับอย่างไร 
+- @fig-graph-simple อธิบาย app ใน @sec-name-app 
+  - `output$greeting` จะมีการคำนวณใหม่ทุกครั้งที่ `input$name` มีการเปลี่ยน
+  - `greeting` มันจะขึ้นกับ`name`
 
 ```{r 04-server-reactive-programming-5, echo = FALSE, out.width = NULL}
 #| label: fig-graph-simple
-#| fig-cap: "The reactive graph shows how the inputs and outputs are connected (Source: Wickham 2021)"
+#| fig-cap: "Reactive graph แสดงให้เห็นว่า inputs และ outputs สัมพันธ์กันอย่างไร (ที่มา: Wickham 2021)"
 knitr::include_graphics("resources/graph-1b.png", dpi = 300)
 ```
 
 
-- Quick high-level sketch of reactive graphs help to understand how pieces fit together
-
+- การร่างแบบของ reactive graphs จะช่วยให้เข้าในแต่ล่ะส่วนได้ดีขึ้น
 
 ### Reactive expressions
-- **Reactive expressions** take inputs and produce outputs
-  - can reduce duplication in reactive code by introducing additional nodes into reactive graph
-  - @fig-graph-expression contains reactive expression `string` (inspect shape!) with code shown below
+- **Reactive expressions** รับค่า inputs แล้วก็สร้าง outputs
+  - สารถช่วยลดการซ้ำซ้อนของ code ได้ด้วยการใส่ nodes ที่ต้องการใน reactive graph
+  - @fig-graph-expression ประกอบด้วย reactive expression `string` ดู code ด้านล่าง
 
 ```{r 04-server-reactive-programming-6, echo = FALSE, out.width = NULL}
 #| label: fig-graph-expression
-#| fig-cap: "A reactive expression is drawn with angles on both sides because it connects inputs to outputs (Source: Wickham 2021)"
+#| fig-cap: "reactive expression จะถูกวาดมีมุมทั้งสองด้านเพราะมันจะเป็นตัวเชื่อมระหว่าง inputs ไปยัง outputs (ที่มา: Wickham 2021)"
 knitr::include_graphics("resources/graph-2b.png", dpi = 300)
 ```
 
-- Below `string` is created with `reactive()` function to app in @sec-name-app.
+- จากด้านล่าง ตัว `string` ถูกสร้างแบบ `reactive()` function ใน @sec-name-app อยากให้สังเกตการเรียกค่าไปใช้
 
 ```{r 04-server-reactive-programming-7, echo=TRUE, eval=FALSE}
 ui <- fluidPage(
@@ -188,8 +184,8 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-- **Avoid duplication**
-  - Q: How does the code below avoid duplicating code?
+- **หลีกเลี่ยงการทำซ้ำ**
+  - Q: code ด้านล่างนี้หลีกเลี่ยงการทำซ้ำได้อย่างไร
 
 ```{r 04-server-reactive-programming-7-2, echo=TRUE, eval=FALSE}
 #| code-fold: true
@@ -209,10 +205,10 @@ shinyApp(ui, server)
 ```
 
 
-### Executation order
-- Order Shiny code is run is solely determined by reactive graph
-- Below we flip code in server function below
-  - Better **keep order for easier understanding**!
+### รันหรือทำตามลำดับ
+- ลำดับของ code ใน Shiny มันรันตาม reactive graph
+- ลองสลับลำดับของ code ใน server 
+  -  **พยายามเขียนตามลำดับให้เข้าใจง่ายเข้าไว้**!
 
 ```{r 04-server-reactive-programming-8-2, echo=TRUE, eval=FALSE}
 ui <- fluidPage(
@@ -229,7 +225,7 @@ shinyApp(ui, server)
 
 
 ### Exercises
-1. Can you spot errors in the code of the different `server1`, `server2` and `server3` below? 
+1. code ด้านล่าง ในส่วนของ `server1`, `server2` และ `server3` นี้ผิดตรงไหน 
 
 ```{r 04-server-reactive-programming-9, echo=TRUE, eval=FALSE}
 # UI
@@ -254,15 +250,14 @@ server3 <- function(input, output, server) {
 }
 
 
-
 ```
 
 
 
-2.  Draw the reactive graph for the following three server functions (what are the inputs, reactives and ouputs):  (Homework: `server2` and `server3`!)
+2.  เขียน reactive graph สำหรับ server functions (ว่าอะไรคือ inputs, reactives และ ouputs):  (Homework: `server2` กับ `server3`!)
 
 ::: {.callout-tip collapse="true"}
-Start by deciding **how many** and **which inputs (1)**, **reactives (2)** and **ouputs (3)** there are. Then start drawing with inputs represented in the first column on the left. You could use, e.g., `name>` for inputs, `>name>` for reactives and `>name` for outputs and arrows to connect them.
+เริ่มด้วยการดูว่ามี **inputs (1)**, **reactives (2)** และ **ouputs (3)** กี่ที่ตรงไหนบ้าง และทำหน้าที่อะไร จากนั้นเริ่มเขียน inputs ใน column แรกทางซ้าย เราอาจจะใช้ อย่างเช่น `name>` สำหรับ inputs `>name>` สำหรับ reactives และ `>name` สำหรับ outputs และใช้ลูกศรเชื่อม
 :::
 
 ```{r 04-server-reactive-programming-10}
@@ -291,64 +286,57 @@ server3 <- function(input, output, session) {
 
 #### Solution(s)
 
-
-
-1. Can you spot errors in the code of the different `server1`, `server2` and `server3` below?
-  - `server1`: Forgot `input$`
-  - `server2`: `input$name` outside of `renderText()` function
-  - `server3`: Typo in `output$greting`
+1. code ผิดตรงไหน ใน `server1`, `server2` และ `server3` 
+  - `server1`: ลืม `input$`
+  - `server2`: `input$name` อยู่นอก `renderText()` function
+  - `server3`: พิมพ์ผิด `output$greting`
 
 <br><br><br>
 
 
-2.  Draw the reactive graph for the following three server functions ([Solution source](https://mastering-shiny-solutions.org/basic-reactivity.html#exercise-4.3.6.1)):
+2.  เขียน reactive graph สำหรับ server functions ทั้ง3 ([Solution source](https://mastering-shiny-solutions.org/basic-reactivity.html#exercise-4.3.6.1)):
 
-To create the reactive graph we need to consider the inputs, reactive
-expressions, and outputs of the app.
+ในการสร้าง reactive graph เราต้องพิจารณา inputs, reactive expressions, และ outputs ของ app
 
-For `server1` we have the following objects:
+สำหรับ `server1` เรามี:
 
-- inputs: `input$a`, `input$b`, and `input$d`
-- reactives: `c()` and `e()`
+- inputs: `input$a`, `input$b`, และ `input$d`
+- reactives: `c()` และ `e()`
 - outputs: `output$f`
 
-Inputs `input$a` and `input$b` are used to create `c()`, which is combined with
-`input$d` to create `e()`. The output depends only on `e()`.
+Inputs `input$a` และ `input$b` ถูกใช้สร้าง `c()` ซึ่งรวมกับ
+`input$d` เพื่อสร้าง `e()` และ สุดท้าย output จะขึ้นกับ `e()`
 
 <center>
 ![reactive graph - server 1](resources/4.3.6.1-s1.png){width=500px}
 </center>
 <br>
 
-For `server2` we have the following objects:
+สำหรับ `server2` เรามี:
 
 - inputs: `input$y1`, `input$y2`, `input$x1`, `input$x2`, `input$x3`
 - reactives: `y()` and `x()`
 - outputs: `output$z`
 
-Inputs `input$y1` and `input$y2` are needed to create the reactive `y()`. In
-addition, inputs `input$x1`, `input$x2`, and `input$x3` are required to create
-the reactive `x()`. The output depends on both `x()` and `y()`.
+Inputs `input$y1` กับ `input$y2` ถูกใช้สร้าง reactive `y()`และ inputs `input$x1`, `input$x2` กับ `input$x3` ถูกใช้สร้าง reactive `x()` ดังนั้น output ขึ้นกับค่า `x()` และ `y()`
 
 <center>
 ![reactive graph - server 2](resources/4.3.6.1-s2.png){width=400px}
 </center>
 <br>
 
-For `server3` we have the following objects:
+สำหรับ `server3` เรามี:
 
 - inputs: `input$a`, `input$b`, `input$c`, `input$d`
 - reactives: `a()`, `b()`, `c()`, `d()`
 
-As we can see below, `a()` relies on `input$a`, `b()` relies on both `a()` and
-`input$b`, and `c()` relies on both `b()` and `input$c`. The final output
-depends on both `c()` and `input$d`.
+ซึ่งจากด้านล่างเราจะเห็นว่า `a()` ขึ้นกับค่า `input$a` และ `b()` ก็ขึ้นกับ `a()` และ
+`input$b` ส่วน `c()` ขึ้นกับ `b()` และ `input$c` และ output สุดท้ายขึ้นกับทั้ง `c()` และ `input$d`
 
 <center>
 ![reactive graph - server 3](resources/4.3.6.1-s3.png){width=600px}
 </center>
 <br>
-
 
 :::
 
@@ -356,34 +344,33 @@ depends on both `c()` and `input$d`.
 
 
 ## Reactive expressions (more!)
-- [Chapter 3.4](https://mastering-shiny.org/basic-reactivity.html#reactive-expressions-1) is recommended reading!
-- **Reactive expressions** (e.g., `reactive()`) are important because...
-  - give Shiny more information so that it can do less recomputation when inputs change
-  - make apps more efficient and easier for humans to understand (simplify reactive graph!)
-- Are like inputs since you can use results of a reactive expression in an output
-- Are like outputs since they depend on inputs and automatically know when they need updating
-- Inputs and reactive expressions are **reactive producers** (see @fig-prod-consumer)
-- Reactive expressions and outputs are **reactive consumers** (see @fig-prod-consumer)
+- แนะนำให้อ่าน [Chapter 3.4](https://mastering-shiny.org/basic-reactivity.html#reactive-expressions-1)!
+- **Reactive expressions** (เช่น `reactive()`) มันสำคัญเพราะ...
+  - มันช่วยให้ข้อมูล Shiny ว่าจะต้องรันในส่วนไหนบ้างโดยที่มันไม่ต้องรันทั้งหมดเมื่อ inputs เปลี่ยน
+  - ช่วยให้ apps  มีประสิทธิภาพมากขึ้น และ code อ่านเข้าใจได้ง่าย 
+- มันเหมือน inputs ที่เราสามารถใช้ results ของ reacive expression ใน output ได้
+- เหมือนกับ outputs ที่มันขึ้นกับ inputs และมันรู้เองอัตโนมัติว่ามันต้องอัพเดทค่าเมื่อไหร่
+- ตัว Inputs กับ reactive expressions ก็คือ **reactive producers** (ดู @fig-prod-consumer)
+- Reactive expressions กับ outputs คือ **reactive consumers** (ดู @fig-prod-consumer)
 
 ```{r 04-server-reactive-programming-11, echo = FALSE, out.width = NULL}
 #| label: fig-prod-consumer
-#| fig-cap: "Inputs and expressions are reactive producers; expressions and outputs are reactive consumers (Source: Wickham 2021)"
+#| fig-cap: "Inputs กับ expressions คือ reactive producers (ตัวสร้าง); expressions กับ outputs คือ reactive consumers (ตัวใช้) (ที่มา: Wickham 2021)"
 
 knitr::include_graphics("resources/producers-consumers.png", dpi = 300)
 ```
 
 
-
-## Reactive functions: Overview
-- Shiny provides a variety of reactive functions such as `reactive()`, `observe()`, `bindevent()` and others.`
-- See insightful discussions on reactivity and reactive functions in [Chapter 3.5.1](https://mastering-shiny.org/basic-reactivity.html#timed-invalidation).
+## Reactive functions: ภาพรวม
+- Shiny มี reactive functions หลากหลาย เช่น `reactive()`, `observe()`, `bindevent()` และอื่นๆ`
+- อยากเข้าใจเรื่อง reactive นี้มากขึ้นลองดูที่  [Chapter 3.5.1](https://mastering-shiny.org/basic-reactivity.html#timed-invalidation).
 
 
 ### reactive()
-- `reactive()`: wraps a normal expression to create a reactive expression
-  - is "reactive" in the sense that if its dependencies change, it will automatically update.
-  - Below reactive `string` changes whenever dependency `input$name` changes.
-  - Q: What would be the *reactive producer* and what the *reactive consumer*?
+- `reactive()`: สำหรับสร้าง reactive expression
+  - ในที่นี้ "reactive" มีความหมายในเชิงว่าถ้าค่าของตัวแปรอะไรที่ขึ้นกับมันนี้เปลี่ยน ตัวมันเองจะเปลี่ยนค่าตามอัตโนมัติ
+  - ด้านล่างนี้ตัว reactive `string` จะเปลี่ยนค่าทุกครั้งที่ `input$name` เปลี่ยนค่า
+  - Q: อะไรที่ควรจะเป็นตัว *reactive producer* และ ตัว *reactive consumer*
 
 
 ```r
@@ -401,15 +388,14 @@ shinyApp(ui, server)
 ```
 
 ### observe() vs. reactive()
-- `reactive()`: creates a reactive expression that can be changed over time by user inputs
-- `observe()`: creates an observer that runs whenever any of its reactive dependencies change
-  - i.e., code inside `observe()` will be re-evaluated whenever any **reactive inputs or reactive expressions** that it references get updated
-  - BUT we don't assign result of `observe()` to a variable, so we can't refer to it from other reactive consumers
-
+- `reactive()`: สร้าง reactive expression ที่ค่าจะเปลี่ยนตามinputsจากผู้ใช้
+- `observe()`: สร้างตัวสังเกตุที่จะรันเฉพาะเมื่อตัว reactive ที่ขึ้นกับมันเปลี่ยน 
+  - เช่น code ใน `observe()` จะรันอีกครั้งถ้าตัว **reactive inputs หรือ reactive expressions** ที่มันอ้างถึงมีการอัพเดทค่า
+  - ปกติเราจะไม่ให้ค่าผลลัพธ์ `observe()` กับตัวแปร ดังนั้นเราจะไม่สามารถอ้างถึงมันจาก reactive consumers อันอื่นได้
 
 
 ::: {.callout-note collapse="true"}
-Below we use a reactive expression using `reactive()` to create `squared`. This is then reused in the `observe()` function that wraps a render function `renderText()` that creates and the output element `output$text`.
+ด้านล่างนี้เราใช้ reactive expression กับ `reactive()` เพื่อสร้าง `squared` จากนั้นก็เอามันไปใช้อีกใน `observe()` function ซึ่งถูกห่อใน render function อย่าง`renderText()` อีกทีเพื่อสร้าง `output$text`
   
 :::
 
@@ -439,14 +425,12 @@ shinyApp(ui = ui, server = server)
 ```
 
 
-
-
-### Reacting on events: bindEvent()
-* `bindEvent()`: provides a straightforward API for event handling
-- `observeEvent()` (observers): used when you want to perform an action in response to an event (see `input$button` below), but you don't need the result of the action to be used in the UI
+### จัดการกับเหตุการณ์: bindEvent()
+* `bindEvent()`: เป็นคำสั่งที่ช่วยจัดการกับเหตุการณ์อย่างง่าย
+- `observeEvent()` (ตัวสังเกตเหตุการณ์): ใช้เมื่อเราต้องการจะทำอะไรบ้างอย่างเมื่อมีเหตุการณ์เกิดขึ้น เหตุการณ์ในที่นี้ เช่นมีการกดปุ่ม พิมพ์ตัวอักษร ลากเม้าส์ และอื่นๆ  (ดูที่ `input$button` ด้านล่างนี้) แต่เราไม่ได้จะใช้ผลจากactionต่อเหตุการณ์นี้ใน UI 
 
 ::: {.callout-note collapse="true"}
-In this example, when the "Generate Random Number" button is clicked, a random number is generated, but it doesn't get displayed immediately. Instead, the `output$randomNumber` expression is bound to `input$dispButton` event with `bindEvent()`, and the result is displayed only when the "Display Random Number" button is clicked. This allows you to have more control over when the UI updates in response to changes in server-side reactive values.
+ในตัวอย่าง เมื่อปุ่ม "Generate Random Number" ถูกกด จะมีการสุ่มเลขขึ้นมาตัวหนึ่ง แต่จะไม่แสดงผลทันที ตัว `output$randomNumber` จะถูกเชื่อมไปยังปุ่ม `input$dispButton` ด้วย `bindEvent()` และผลลัพธ์เลขสุ่มจะแสดงก็ต่อเมื่อปุ่ม "Display Random Number" ถูกกด ด้วยวิธีนี้เราสามารถที่จะควบคุม UI ได้ว่าจะอัพเดทผลลัพธ์เมื่อใด
 :::
 
 ```r
@@ -480,15 +464,13 @@ shinyApp(ui = ui, server = server, options = list(display.mode='showcase'))
 
 
 
-
-
-### eventReactive() (skip!)
-* Alternative to `bind_event()`
-* `eventReactive()`: Similar to `reactive()`, but only re-evaluates when a certain event is triggered. Can be used in combination with `observeEvent()`.
+### eventReactive() (ข้าม!)
+* อีกวิธีคือใช้ `bind_event()`
+* `eventReactive()`: เหมือนกับ `reactive()` แต่จะcode ภายในจะถูกรันเมื่อมีเหตุการณ์ที่สนใจเกิดขึ้น สามารถที่จะใช้ร่วมกับ `observeEvent()`ได้
 
 
 ::: {.callout-note collapse="true"}
-In this app, when you click the "Generate Random Number" button, a random number is generated, but it's not displayed yet. When you click the "Display Random Number" button, the generated number is then displayed. The `eventReactive()` function is used to create a reactive value (the random number) that is updated only when a specific event (clicking the "Generate Random Number" button) occurs.
+ผลลัพธ์จะเหมือนกับ app ก่อนหน้านี้ ตัว `eventReactive()` function ถูกใช้สร้างตัวแปรแบบ reactive (ตัวเลขสุ่ม) ที่มันจะอัพเดทเฉพาะเมื่อมีการกดปุ่ม "Generate Random Number" เท่านั้น
 :::
 
 
@@ -518,13 +500,12 @@ shinyApp(ui = ui, server = server, options = list(display.mode='showcase'))
 ```
 
 
-
-### isolate() (skip!)
-* `isolate()`: used to access the value of a reactive expression or input without setting up a dependency
-  - useful to access the current value of an input or reactive expression, but without re-running the code when that input or expression changes
+### isolate() (ข้าม!)
+* `isolate()`: ใช้เพื่อเข้าถึงค่าของ reactive expression หรือ input โดยไม่ต้องผ่านค่าอะไรเลย
+  - มีประโยชน์ในการเข้าถึงค่า ณ ปัจจุบันของ inputs หรือ reactive expression
   
 ::: {.callout-note collapse="true"}
-In this app, when you click the "Generate Random Number" button, a random number is generated. This number does not immediately cause a reactive event because it's isolated within the `isolate()` function. It only gets displayed when you click the "Display Random Number" button. Changes to `randNum$num` after "Display Random Number" button is clicked won't affect the displayed value until the button is clicked again. Thus, the `isolate()` function enables the use of reactive values without triggering reactivity.
+ใน app เลขสุ่มจะไม่แสดงผลทันทีหลังจากกดปุ่ม "Generate Random Number"  เลขสุ่มที่เกิดขึ้นจะยังไม่มีผลเพราะมันถูก แยกออกมาด้วย `isolate()` function ซึ่งมันจะแสดงค่าก็ต่อเมื่อ ปุ่ม "Display Random Number" ถูกกด การเปลี่ยนค่าของ `randNum$num` หลังจากปุ่ม "Display Random Number" ถูกกด จะยังไม่มีผลจนกว่า ปุ่ม "Display Random Number" จะถูกกดอีกครั้ง ฉะนั้น `isolate()` function ช่วยให้เราใช้หรือเข้าถึงค่าแบบ reactive values โดยที่ไม่ต้องมี trigger
 :::
   
 
@@ -559,11 +540,11 @@ shinyApp(ui = ui, server = server, options = list(display.mode='showcase'))
 ```
 
 
-### reactiveTimer() (skip!)
-* `reactiveTimer()`: used to create a reactive expression that invalidates itself after a given number of milliseconds. This can be useful for causing certain parts of your Shiny app to update on a regular interval. 
+### reactiveTimer() (ข้าม!)
+* `reactiveTimer()`: ใช้สำหรับสร้าง reactive expression ที่จะหยุดสักช่วงเวลาหนึ่ง (เป็น milliseconds) มีประโยชน์กรณีทีเราต้องการให้บางส่วนใน app มีการอัพเดทเป็นช่วงเวลาที่ต้องการ 
 
 ::: {.callout-note collapse="true"}
-In this example, `autoInvalidate()` is a reactive expression that becomes invalidated (i.e., signals that it needs to be re-evaluated) every 1000 milliseconds. By referencing `autoInvalidate()` inside the `renderText()` function, we're creating a dependency — so, every time `autoInvalidate()` is invalidated, the current time is re-evaluated and the UI is updated with the new time.
+ในตัวอย่าง `autoInvalidate()` คือ reactive expression ที่จะทำให้หยุดทุก 1000 milliseconds โดยการใช้`autoInvalidate()` ข้างใน `renderText()` เป็นการบอกว่าทุกครั้งที่ `autoInvalidate()` หยุดทำงาน ก็จะมีการคำนวณและแสดงเวลาใหม่
 :::
 
 
@@ -583,7 +564,7 @@ server <- function(input, output) {
   
   output$currentTime <- renderText({
     autoInvalidate()  # This line causes the reactive expression to be invalidated (and thus re-evaluated) every second
-    as.character(Sys.time())  # Display the current time
+    format(Sys.time(), "%a %b %d %Y %X")  # Display the current time
   })
 }
 
@@ -592,18 +573,11 @@ shinyApp(ui = ui, server = server)
 ```
 
 
-
-
-
-
-
-
-
 ## Guerry app (reactivity): Tabulate data tab
-* The Guerry app includes the following reactive functions: `reactive()`, `observe()`, `isolate()`, `bindEvent()`.
-* Below the basic code underlying the Tabulate tab of our app.
-  - What would the reactive graph look like for this app (how many inputs, reatives, outputs)?
-  - Which reactive functions can you identify?
+* reactive functions ที่ใช้ใน Guerry app: `reactive()`, `observe()`, `isolate()`, `bindEvent()`.
+* code พื้นฐานสำหรับ Tabulate tab ที่ใช้ใน app
+  - ตัว reactive graph เป็นอย่างไรสำหรับ app นี้(มี inputs, reatives, outputs กี่ที่)
+  - reactive functions อะไรบ้าง
 
 
 
@@ -614,94 +588,84 @@ shinyApp(ui = ui, server = server)
 ```
 
 
+## การโหลดสิ่งต่างใน Shiny
 
+### code มันถูกรันตอนไหน?
+* code มันถูกรันตอนไหน ([ลองดูที่นี่](https://shiny.posit.co/r/getstarted/shiny-basics/lesson5/))
 
-
-
-
-
-
-## Loading things in Shiny
-
-### When is code run?
-* When is code in a shiny app run? ([Source](https://shiny.posit.co/r/getstarted/shiny-basics/lesson5/))
-
-* Code outside of ui and server is run once, when the app is launched.
+* Code ที่อยู่นอก ui กับ server จะถูกรันทันทีที่ app ถูกเริ่มใช้งาน
 
 ![](resources/run-once.png)
 
-* Code inside the server function is run once each time a user visits the app (opens the webpage).
+* Code ในส่วน server function จะถูกรันเพียงครั้งเดียวตอนเริ่มต้นเมื่อผู้ใช้เปิด app 
 
 ![](resources/run-once-per-user.png)
 
-* Code inside render functions is run each time a user changes a widget (`input$...`) that `ouput$...` depends on
+* Code ภายใน render functions จะถูกรันทุกครั้งที่ ผู้ใช้เปลี่ยนค่า inputs (`input$...`) และ `ouput$...` ก็เปลี่ยนตาม
 
 ![](resources/run-many-times.png)
 
-* Q: So where shall we put the function to load the datasets?
-* Q: What problem might occur if we place certain code wrongly ? Where would you place data management tasks?
+* Q: เราควรจะใส่functionสำหรับโหลดข้อมูลตรงไหน
+* Q: ปัญหาอาจจะเกิดเมื่อเราใส่ผิดที่ ฉะนั้นเราควรจะใส่พวกการจัดการข้อมูลตรงไหน
 
 ::: {.callout-warning collapse="true"}
 
 #### Insight
 
-- If possible place anything computationally intensive outside of the render functions.
-  - e.g., might make sense to estimate models/subset data beforehand if possible and access precalculated objects in reactive functions
+- ถ้าเป็นไปได้ไม่ควรใส่ส่วนที่มีการคำนวณเยอะๆ ใน render functions
+  - อาจจะต้องมีการเตรียมข้อมูลให้พร้อมก่อนเรียกใช้งานใน reactive functions
 
 :::
 
 
 
-### Where to load things
-* Code outside ```server <- function(input, output) {}``` is run once, when you launch your app
-* Code inside ```server <- function(input, output) {}``` is run once each time a user visits your app
-* Code inside ```render*``` functions is rerun constantly (not only when user changes widget value ( see [reactivity](https://shiny.posit.co/r/articles/build/understanding-reactivity/))
-* That means...
-    + Load **Source scripts, libraries, and data** outside of ```server``` function (at the beginning)
-        + Store data in ```www/``` folder in your app directory
-        + Access with ```read.table("www/swiss.csv", sep=",")```
-        + Access online data by inserting the url into the ```read*``` function (e.g. ```read.table()```)
-    + **User specific objects** (e.g. object that records user's session information) are defined inside shinyServer’s unnamed function, but outside of any render* calls
-        + e.g. user registers himself, user data as input data (compare income)
-    + **Code/objects that are affected by choices in widgets** must be placed within the a ```render*``` function
-        + Shiny reruns code in a ```render*``` chunk each time a user changes a widget mentioned in the chunk
-* **Avoid** placing code within render function that does not need to be there... for performance reasons!
+### ควรจะโหลดอะไรตรงไหน
+* Code นอก ```server <- function(input, output) {}``` จะถูกรันครั้งเดียวตอน app เริ่มทำงาน
+* Code ภายใน ```server <- function(input, output) {}``` จะรันครั้งเดียวตอนที่ผู้ใช้เปิดapp
+* Code ภายใน ```render*``` จะมีการรันใหม่ถ้ามีการอัพเดท inputs ( ดูที่ [reactivity](https://shiny.posit.co/r/articles/build/understanding-reactivity/))
+* หมายความว่า...
+    + โหลด **scripts, libraries, กับ data** นอก ```server``` function (ตรงตำแหน่งเริ่มต้น)
+        + เก็บข้อมูลไว้ที่ ```www/``` ของ app 
+        + เข้าถึงข้อมูลด้วย ```read.table("www/swiss.csv", sep=",")```
+        + เข้าถึง ข้อมูล online ด้วยการใส่ url ในคำสั่ง ```read*``` function (เช่น ```read.table()```)
+    + **ตัววัตถุจำเพาะ** (เช่น วัตถุที่เก็บข้อมูลการใช้งาน) ถูกนิยามภายใน Server function แต่ภายนอก render* ทั้งหลาย
+        + เช่น ผู้ใช้ลงทะเบียนข้อมูลตัวเองเป็น input data 
+    + **Code/objects ที่ถูกผลกระทบจาก widgets** ควรจะใส่ภายใน ```render*``` function
+        + Shiny จะรัน code ใน ```render*``` ทุกครั้งที่ input widgets มีการเปลี่ยนค่า
+* **Avoid** พยายามอย่าใส่ code ที่ไม่จำเป็นหรือคำนวณนาน ใน render function มันเป็นเรื่องของประสิทธิภาพ!
 
 
-## Data storage
-- Things might get tricky for more data-hungry Shiny apps
-- The way data is stored and accessed has some important implications for
-    - **Memory allocation**: R stores objects in the working memory
-    - **Performance**: "R does too much" - Colin Fay
-    - **Readability**: Putting everything in one file might get messy
-- For more sophisticated setups: **databases** (e.g., SQLite, PostgreSQL, MongoDB)
-- R can work perfectly well with database connections (R Packages: DBI, dbplyr, sf) ([see overview here](https://solutions.posit.co/connections/db/))
-  - SQLite works well for casually trying out databases ([see overview here](https://solutions.posit.co/connections/db/databases/sqlite/index.html))
-
-
-
-
-
-## Summary
-
-To build reactive shiny apps...
-
-* Use `*Output` functions to place reactive objects in the UI (webpage)
-* Use `render*` functions to let R build output objects (on the server)
-    + Render functions are located in `server <- function(input, output) {...})` 
-    + R expressions are surrounded by braces, `{}` in `render*` functions
-    + Outputs of `render*` are saved in the `output` list, with one entry for each reactive object in your app
-    + Reactivity by including an `input` values in a `render*` expression
-* Often times you will adapt/modify [examples](http://shiny.rstudio.com/gallery/) that you find online
+## ที่เก็บ Data 
+- รูปแบบการจัดเก็บข้อมูลมีความสำคัญ
+    - **Memory allocation**: R จะเก็บค่าต่าง ๆ ไว้ที่ working memory
+    - **Performance**: "R ทำหลายอย่างแล้ว" - Colin Fay
+    - **Readability**: ใส่ทุกอย่างไปในไฟล์เดียวมันจะอ่านยาก
+- สำหรับการทำงานกับฐานข้อมูล : **databases** (เช่น  SQLite, PostgreSQL, MongoDB)
+- R สามารถทำงานกับ database (R Packages: DBI, dbplyr, sf) ([ดูภาพรวมที่](https://solutions.posit.co/connections/db/))
+  - SQLite ก็ทำงานได้ดี ([ดูภาพรวม](https://solutions.posit.co/connections/db/databases/sqlite/index.html))
 
 
 
 
 
+## สรุป
 
-## Appendix: Visualizing reactivity with reactlog
-- `reactlog` can be used to visualize and explore the reactivity of a Shiny app
-- Below we do so for the Shiny app above (app is stored in a folder)
+ในการสร้าง reactive shiny apps...
+
+* ใช้ `*Output` เพื่อวาง reactive objects บน UI (webpage)
+* ใช้ `render*`  เพื่อให้ R สร้าง output objects (บน server)
+    + Render functions ใส่ใน `server <- function(input, output) {...})` 
+    + R expressions จะถูกล้อมด้วยปีกกา `{}` ใน `render*` functions
+    + ผลลัพธ์จาก `render*` จะถูกเก็บไว้ที่ `output` list
+    + Reactivity ด้วยการใส่ `input` ใน `render*` expression
+* ถ้าอยากจะสร้าง ปรับปรุง เปลี่ยนแปลง app ที่มีอยู่ ลองดูตัวอย่างนี้เป็นแนวทางได้ [ตัวอย่าง](http://shiny.rstudio.com/gallery/)
+
+
+
+
+## Appendix: แสดง reactivity ด้วย reactlog
+- `reactlog` สามารถใช้เพื่อแสดงผลและสำรวจ reactivity ของ Shiny app
+- ลองดูตัวอย่างนี้
 ```{r 04-server-reactive-programming-14, eval=FALSE, echo=TRUE}
 # Restart R to delete log
 .rs.restartR()
@@ -714,7 +678,7 @@ reactlog_enable()
 # reactlog_disable()
 
 # run a shiny app
-runApp("C:/Users/Paul/Google Drive/13_SHINY_Workshop/shinyapps/guerry/states_paul/app_tab_tabulate.R")
+runApp("shinyapps/guerry/states_paul/app_tab_tabulate.R")
 
 # once app has closed, display reactlog from shiny
 shiny::reactlogShow()
@@ -722,30 +686,12 @@ shiny::reactlogShow()
 
 
 
-
-
-
-
-
-
-
-
-## Appendix: Imperative vs. Declarative programming and laziness
+## Appendix: Imperative กับ Declarative programming และ laziness
 
 - **Imperative vs. declarative programming** ([Chapter 3.3.1](https://mastering-shiny.org/basic-reactivity.html#imperative-vs-declarative-programming))
-  - **Imperative code**: "Make me a sandwich" (*"assertive" code*)
-  - **Declarative code**: "Ensure there is a sandwich in the refrigerator whenever I look inside of it" (*"passive-aggressive" code*)
-  - Shiny follows the latter principles
-- **Laziness** as strength of **declarative programming** ([Chapter 3.3.2](https://mastering-shiny.org/basic-reactivity.html#laziness))
-  - app will only ever do the minimal amount of work needed to update the output controls that you can currently see
-
-
-
-
-
-
-
-
-
-
+  - **Imperative code**: "ทำแซนวิชให้หน่อย" 
+  - **Declarative code**: "แน่ใจว่ามีแซนวิชทุกครั้งที่เปิดตู้เย็น"
+  - Shiny จะเป็นแบบ Declarative
+- **Laziness** เป็นจุดแข็งของ **declarative programming** ([Chapter 3.3.2](https://mastering-shiny.org/basic-reactivity.html#laziness))
+  - app มันจะทำงานให้น้อยที่สุดที่จะอัพเดทตัวควบคุมผลลัพธ์
 

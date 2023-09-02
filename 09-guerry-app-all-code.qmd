@@ -1,10 +1,10 @@
 ---
-title: "Guerry app: All the code"
+title: "Guerry app"
 ---
 
 
 # Guerry app code
-- Below you can find the complete code to built the Guerry app.
+- code ที่ใช้ในการสร้าง Guerry app
 
 
 

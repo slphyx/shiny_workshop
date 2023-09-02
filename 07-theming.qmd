@@ -23,51 +23,50 @@ pacman::p_load(
 ```
 
 
-You will learn how to:
+จุดประสงค์:
 
--   Apply global themes to your Shiny app
--   Use the "Inspect" tool to your advantage
--   Add visual feedback during loading times
--   Supplement basic CSS to do what R cannot
+- ประยุกต์ใช้ธีมในแอป Shiny 
+- ใช้เครื่องมือ "Inspect" 
+- เพิ่มanimationเวลาโหลด
+- ใช้งาน CSS พื้นฐาน ทำสิ่งที่ R ไม่สามารถทำได้
 
-# Theming in Shiny
+# การใส่ธีมใน Shiny
 
--   Shiny apps look a bit lackluster by default - but why is that?
--   Shiny is based on a raw form of Bootstrap by default
+- ค่าเริ่มต้นของแอป Shiny ดูไม่ค่อยสวย  แต่ทำไมถึงเป็นแบบนั้น
+- Shiny ใช้รูปแบบเริ่มต้นจาก Bootstrap
 
 ## Bootstrap
 
--   [Bootstrap](https://en.wikipedia.org/wiki/Bootstrap_(front-end_framework)) is a framework containing design templates that are based on CSS, HTML and JavaScript
-    -   Used by around 20% of websites
-    -   One of the most popular GitHub projects
-    -   Possibly a bit boring due to its popularity
--   Classic Shiny uses Bootstrap 3
--   `bs4Dash`, the package we use for the Guerry dashboard, uses Bootstrap 4 (more precisely [AdminLTE 3](https://adminlte.io/))
+- [Bootstrap](https://en.wikipedia.org/wiki/Bootstrap_(front-end_framework)) เป็นเฟรมเวิร์กที่ประกอบด้วยเทมเพลตดีไซน์ที่มีพื้นฐานจาก CSS, HTML และ JavaScript
+    - ใช้กับเว็บไซต์ทั่วไปประมาณ 20%
+    - เป็นหนึ่งในโครงการ GitHub ที่ได้รับความนิยมมากที่สุด
+    - บางครั้งอาจจะน่าเบื่อเพราะคนใช้กันเยอะ
+- Shiny รุ่นคลาสสิกใช้ Bootstrap 3
+- `bs4Dash` แพคเกจที่เราใช้สำหรับแดชบอร์ด Guerry ใช้ Bootstrap 4 (โดยเฉพาะ [AdminLTE 3](https://adminlte.io/))
 
-## Shiny extensions for styling
+## ส่วนขยายใน Shiny สำหรับการตกแต่งสไตล์
 
--   Shiny has some really cool extensions for amping up your UI, some of which we will address:
-    -   [`bslib`](https://rstudio.github.io/bslib/) - customize bootstrap themes
-    -   [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html) - customize dashboard themes
-    -   [`waiter`](https://shiny.john-coene.com/waiter/) - create pretty spinners
-    -   [`shinyWidgets`](https://cran.r-project.org/web/packages/shinyWidgets/index.html) - beautify input widgets
-    -   [`shinyjs`](https://cran.r-project.org/web/packages/shinyjs/index.html) - do JavaScript magic without knowing JavaScript
+- Shiny มีส่วนขยายที่น่าสนใจมากสำหรับการเพิ่มความน่าสนใจให้กับ UI เราจะพูดถึงบางส่วนได้แก่:
+    - [`bslib`](https://rstudio.github.io/bslib/) - ปรับแต่งธีมของ bootstrap
+    - [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html) - ปรับแต่งธีมแดชบอร์ด
+    - [`waiter`](https://shiny.john-coene.com/waiter/) - สร้างสปินเนอร์ที่สวยงาม
+    - [`shinyWidgets`](https://cran.r-project.org/web/packages/shinyWidgets/index.html) - ประดิษฐ์วิดเจ็ตอินพุตอย่างงดงาม
+    - [`shinyjs`](https://cran.r-project.org/web/packages/shinyjs/index.html) - ใช่ JavaScript โดยไม่ต้องรู้จัก JavaScript (แต่รู้ไว้บ้างก็ดี)
 
-## Further reading
+## เพิ่มเติม
 
--   [Chapter 6](https://mastering-shiny.org/action-layout.html) of Hadley Wickham's "Mastering Shiny"
--   [Chapter 6 to 9](https://unleash-shiny.rinterface.com/beautify-css.html) of David Granjon's "Outstanding User Interfaces with Shiny"
+-   [Chapter 6](https://mastering-shiny.org/action-layout.html) ของ Hadley Wickham's "Mastering Shiny"
+-   [Chapter 6 to 9](https://unleash-shiny.rinterface.com/beautify-css.html) ของ David Granjon's "Outstanding User Interfaces with Shiny"
 
 
-# Refresher on HTML tags
+# การอัปเดตความรู้เกี่ยวกับแท็ก HTML
 
-* Shiny's **HTML tag functions** translate input into html code
-  - Try pasting `h2("A NEW HOPE", align = "center")` into your console
-  - `h2()` function creates `<h2></h2>` html tag
-- Common HTML tags (e.g., `⁠<div`>⁠) can be created by calling for their tag name directly (e.g., `div()`)
-- Less common tags (e.g., `⁠<article`>⁠), use the tags list collection (e.g., `tags$article()`) stored in the `tags` object
-- See [full reference for HTML tags](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)  
-
+* **ฟังก์ชันแท็ก HTML** จะแปลง input เป็น html 
+  - ลองรัน `h2("A NEW HOPE", align = "center")` ในคอนโซลดูครับ
+  - ฟังก์ชัน `h2()` สร้างแท็ก html `<h2></h2>`
+- แท็ก HTML ทั่วไป (เช่น `<div>`) สามารถสร้างได้โดยเรียกชื่อแท็กของพวกเขาโดยตรง (เช่น `div()`)
+- แท็กที่ไม่ค่อยใช้ (เช่น `<article>`) ใช้คอลเลกชันของรายการแท็ก (เช่น `tags$article()`) ที่เก็บไว้ในอ็อบเจ็กต์ `tags`
+- ดู[การอ้างอิงแบบเต็มสำหรับแท็ก HTML](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)
 
 ```{r cache=TRUE, eval=FALSE, include=TRUE}
 library(bs4Dash)
@@ -109,48 +108,49 @@ shinyApp(ui, server)
 ```
 
 
-# Inspect tool
+# เครื่องมือ Inspect
 
--   Most major browsers offer an "Inspect" tool for websites
-    -   Lets you manipulate single HTML elements in real time (**HTML pane**)
-    -   Lets you change the CSS styling of a website in real time (**CSS pane**)
-    -   Lets you change the layout of a website in real time (**Layout pane**)
-    -   Provides an interface to visualize where HTML elements are located on a website (**"Pick an element"**)
-    -   Lets you extract colors directly from a website (**"Grab a color"**)
+- เบราว์เซอร์ส่วนใหญ่มีเครื่องมือ "Inspect" สำหรับเว็บไซต์
+    - ช่วยให้ปรับเปลี่ยนองค์ประกอบ HTML ในแบบ real time (**แท็ก HTML**)
+    - ช่วยให้เปลี่ยนการจัดรูปแบบ CSS ของเว็บไซต์ในแบบ real time (**แท็ก CSS**)
+    - ช่วยให้เปลี่ยนเค้าโครงของเว็บไซต์ (**Layout pane**)
+    - มีอินเทอร์เฟซให้คุณมองเห็นว่า HTML ส่วนที่สนใจ อยู่ตรงไหนบนเว็บไซต์ (**"Pick an element"**)
+    - ช่วยให้เลือกสีได้โดยตรงจากเว็บไซต์ (**"เลือกสี"**)
 
-## How to open the inspector
+## วิธีเปิดตัวตรวจสอบ inspector
 
-1.  Visit a website (e.g. your Shiny app in a browser)
-2.  Right click somewhere (e.g. an element you want to inspect)
-3.  Select "Inspect"
+1. เข้าชมเว็บไซต์ (เช่นเปิดแอป Shiny ในเบราว์เซอร์)
+2. คลิกขวาบนหน้าเว็บ (เช่น ตรงต้องการตรวจสอบ)
+3. เลือก "Inspect"
 
--   A window will open that looks just like the one below
+- หน้าต่างจะเปิดขึ้นมาให้ดูเหมือนตัวอย่างด้านล่างนี้
 
 ::: callout-tip
-Also works in RStudio! Right click somewhere, then "Inspect Element"
+ถ้าในRStudio ก็คลิกขวาแล้วเลือก "Inspect Element"
 :::
 
-![The Inspect tool in Firefox](resources/inspect.png)
+![Inspect tool ใน Firefox](resources/inspect.png)
 
-## Exploring the inspector
 
--   **Question:** From the list above, can you make out which part of the inspector does what?
-    -   HTML pane
-    -   CSS pane
-    -   Layout pane
-    -   Pick an element
-    -   Grab a color
--   Despite the complicated look, the Inspect tool can be useful for all kinds of theming endeavours
+## ใช้เครื่องมือตรวจสอบ
 
-# Theming with `bslib`
+- **คำถาม:** จากด้านบน บอกได้ไหมว่าแต่ล่ะส่วนของเครื่องมือตรวจสอบทำอะไร
+    - แท็ก HTML
+    - แท็ก CSS
+    - แท็กเค้าโครง
+    - เลือกองค์ประกอบ
+    - เลือกสี
+- แม้ว่าเครื่องมือตรวจสอบจะดูซับซ้อน แต่สามารถใช้ในการกำหนดธีมต่าง ๆ ได้ในทุกกรณี
 
--   The `bslib` package can be used to control the bootstrap theme configuration
--   Bootstrap themes can be specified using the [`bs_theme()`](https://rstudio.github.io/bslib/reference/bs_theme.html) function
--   In Shiny, we can plug `bs_theme`s in page layout such as [`fillPage()`](https://shiny.posit.co/r/reference/shiny/1.4.0/fillpage) or [`fluidPage()`](https://shiny.posit.co/r/reference/shiny/1.4.0/fluidpage)
+# การกำหนดธีมด้วย `bslib`
 
-## Bootstrap versions with `bslib`
+- แพคเกจ `bslib` สามารถใช้ควบคุมการกำหนดค่าธีมของ bootstrap ได้
+- สามารถระบุธีมของ Bootstrap ได้โดยใช้ฟังก์ชัน [`bs_theme()`](https://rstudio.github.io/bslib/reference/bs_theme.html)
+- ใน Shiny เราสามารถนำ `bs_theme` มาประกอบกับเค้าโครงหน้าเพจเช่น [`fillPage()`](https://shiny.posit.co/r/reference/shiny/1.4.0/fillpage) หรือ [`fluidPage()`](https://shiny.posit.co/r/reference/shiny/1.4.0/fluidpage)
 
--   In the following code chunk, we create a bootstrap theme that applies the theming of the most recent Bootstrap 5 version:
+## เวอร์ชัน Bootstrap กับ `bslib`
+
+- ในชุดโค้ดด้านล่างนี้ เราสร้างธีม bootstrap ที่ใช้งานธีมของเวอร์ชัน Bootstrap 5 ล่าสุด:
 
 ```{r eval=FALSE}
 ui <- fluidPage(
@@ -168,14 +168,15 @@ server <- function(input, output, session) {}
 shinyApp(ui, server)
 ```
 
--   The differences to the classic bootstrap 3 are small but noticeable!
+-   ความแต่ต่างกับ bootstrap 3 มันน้อยมากแต่ก็ดูออก
 
 ![](resources/bs3_bs5.png)
 
+
 ## Bootswatch
 
--   Other than the version, there's a lot to change in [`bs_theme()`](https://rstudio.github.io/bslib/reference/bs_theme.html)
--   For example, we can apply one of the pre-made Bootswatch themes:
+- ยังมีอะไรอีกพอสมควรที่สามารถปรับเปลี่ยนได้ใน [`bs_theme()`](https://rstudio.github.io/bslib/reference/bs_theme.html)
+- ตัวอย่าง เช่น เราสามารถนำธีม Bootswatch ที่ทำไว้ก่อนแล้วมาใช้งานได้:
 
 ```{r eval=FALSE}
 ui <- fluidPage(
@@ -199,31 +200,35 @@ shinyApp(ui, server)
 
 -   You can try out all theming options in real time by running [`bs_theme_preview()`](https://rstudio.github.io/bslib/reference/bs_theme_preview.html)
 
-::: callout-note
-## Exercise
+## การสำรวจตัวเลือกในการกำหนดธีม
 
-Experiment with `bs_theme_preview()` to learn about the different arguments to `bs_theme()`. When you find a pretty theme, re-create the theme programmatically using `bs_theme()`
+- เราลองใช้ธีมทั้งหมดได้ในแบบ real timeโดยการเรียกใช้ [`bs_theme_preview()`](https://rstudio.github.io/bslib/reference/bs_theme_preview.html)
+
+::: callout-note
+## แบบฝึกหัด
+
+ทดลองใช้ `bs_theme_preview()` เพื่อเรียนรู้เกี่ยวกับอาร์กิวเมนต์ต่าง ๆ ของ `bs_theme()` ถ้าเจอธีมที่ชอบ ลองสร้างธีมนั้นอีกครั้งโดยใช้ `bs_theme()` 
 :::
 
 ::: {.callout-tip collapse="true"}
-The code to update the theme including all arguments is printed to the console!
+code สำหรับอัพเดท theme มันถูกพิมพ์แสดงทั้งหมดใน console
 :::
 
-# Theming with `fresh`
+# การกำหนดธีมด้วย `fresh`
 
--   [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html) is an R package that can be used to theme, besides classic Shiny, dashboards like [`shinydashboard`](https://rstudio.github.io/shinydashboard/) and [`bs4Dash`](https://rinterface.github.io/bs4Dash/)
--   [`bs4Dash`](https://rinterface.github.io/bs4Dash/) can easily be themed using the [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html) package
+- [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html) เป็นแพคเกจ R ที่ใช้สำหรับการกำหนดธีม ไม่ว่าจะเป็นแบบคลาสสิกของ Shiny, แดชบอร์ดเช่น [`shinydashboard`](https://rstudio.github.io/shinydashboard/) และ [`bs4Dash`](https://rinterface.github.io/bs4Dash/)
+- [`bs4Dash`](https://rinterface.github.io/bs4Dash/) สามารถทำธีมได้อย่างง่ายด้วยแพคเกจ [`fresh`](https://dreamrs.github.io/fresh/reference/fresh.html)
 
-## Adding a GESIS-like theme
+## เพิ่มธีมที่คล้ายกับ GESIS
 
--   Workflow:
-    -   Create a theme using [`fresh::create_theme()`](https://dreamrs.github.io/fresh/reference/create_theme.html)
-    -   Add theming elements, such as layout, colors, fonts
-    -   Pass the theme object as an argument to [`dashboardPage()`](https://rinterface.github.io/bs4Dash/reference/dashboardPage.html)
--   In the following code chunk, we add a theme that roughly resembles the GESIS web style
+- ขั้นตอนทำงาน:
+    - สร้างธีมโดยใช้ [`fresh::create_theme()`](https://dreamrs.github.io/fresh/reference/create_theme.html)
+    - เพิ่มองค์ประกอบของธีม เช่น เค้าโครง สี และแบบอักษร
+    - ส่งวัตถุธีมเป็นอาร์กิวเมนต์ให้กับ [`dashboardPage()`](https://rinterface.github.io/bs4Dash/reference/dashboardPage.html)
+- ในชุดโค้ดด้านล่างนี้ เราเพิ่มธีมที่คล้ายกับสไตล์เว็บของ GESIS 
 
 ::: callout-tip
-Type [`fresh::bs4dash_`](https://dreamrs.github.io/fresh/reference/) in the RStudio console and explore fresh's theming elements
+พิมพ์ [`fresh::bs4dash_`](https://dreamrs.github.io/fresh/reference/) ในคอนโซลของ RStudio และลองสำรวจองค์ประกอบในการกำหนดธีมของ fresh
 :::
 
 ```{r eval=FALSE}
@@ -262,26 +267,27 @@ dash_theme <- create_theme(
 ```
 
 ::: callout-note
-## Exercise
+## แบบฝึกหัด
 
-Using the pipette tool from the Inspector, extract the color scheme from a website of your choice. Create a theme using the respective colors (and other theming elements) and pass it to your Shiny dashboard.
+ใช้เครื่องมือที่เรียกว่า "pipette" จากเครื่องมือตรวจสอบ เพื่อหารูปแบบสีจากเว็บไซต์ที่สนใจ สร้างธีมโดยใช้สีที่เหมาะสม (และองค์ประกอบอื่น ๆ ในการกำหนดธีม) และส่งต่อไปยังแดชบอร์ด Shiny 
 :::
 
-# Spinners
+# Spinners ตัวหมุน
 
--   A lack of feedback in graphical user interfaces can lead to frustration
--   In such cases, spinners can be an elegant solution
--   There are many Shiny extensions that support spinners: [`shinycssloaders`](https://cran.r-project.org/web/packages/shinycssloaders/), [`shinybusy`](https://cran.r-project.org/web/packages/shinybusy/), [`waiter`](https://cran.r-project.org/web/packages/waiter/)
+- ระหว่างใช้งานแอพหรือโหลด ถ้ามันไม่มีโต้ตอบก็อาจจะสร้างความรู้สึกไม่ดีกับผู้ใช้
+- ในกรณีนี้ สปินเนอร์สามารถช่วยได้
+- มีส่วนขยายใน Shiny หลายรูปแบบที่รองรับสปินเนอร์: [`shinycssloaders`](https://cran.r-project.org/web/packages/shinycssloaders/), [`shinybusy`](https://cran.r-project.org/web/packages/shinybusy/), [`waiter`](https://cran.r-project.org/web/packages/waiter/)
 
-### Startup spinners with `waiter`
+### เริ่มสปินเนอร์ด้วย `waiter`
 
--   `bs4Dash` and `waiter` work particularly well together:
-    -   Call `tags$head(use_waiter())` at the beginning of `dashboardBody`
-    -   Assemble a preloader and pass it as an argument to the `dashboardPage`
+- `bs4Dash` และ `waiter` ทำงานร่วมกันได้ดีมาก:
+    - เรียกใช้ `tags$head(use_waiter())` ที่เริ่มของ `dashboardBody`
+    - รวมโปรเสริมเตรียมไว้และส่งต่อให้เป็นอาร์กิวเมนต์ให้กับ `dashboardPage`
 
 ::: callout-tip
-You can preview what spinners look like through the [`preview_spinner()`](https://rdrr.io/github/JohnCoene/waiter/man/preview_spinner.html) function or by visiting <https://jslth.shinyapps.io/waiter-gallery/>
+เราดูตัวอย่างสปินเนอร์ได้ผ่าน [`preview_spinner()`](https://rdrr.io/github/JohnCoene/waiter/man/preview_spinner.html) หรือโดยการเข้าชม <https://jslth.shinyapps.io/waiter-gallery/>
 :::
+
 
 ```{r eval = FALSE}
 preloader <- list(
@@ -306,15 +312,22 @@ ui <- dashboardPage(
 -   Not least, Shiny apps are built using HTML, CSS and JavaScript, so it's naturally a good idea to know the essentials
 -   The `bs4Dash::box()` applies a lot of styling behind the scenes and we can inspect what exactly is happening by printing its returned object:
 
+# การปรับแต่งส่วนต่าง ๆ
+
+- แอป Shiny สามารถดูดีได้โดยไม่ต้องมีโค้ดที่ไม่ใช่ R เลย (ว่าไงนะ55)
+- อย่างไรก็ตาม เพื่อให้แอปมีความสมบูรณ์ จำเป็นต้องใช้ CSS
+- แอป Shiny ถูกสร้างขึ้นโดยใช้ HTML, CSS และ JavaScript จำเป็นต้องเข้าใจสิ่งจำเป็นพื้นฐาน
+- `bs4Dash::box()` เบื้องหลังมีการปรับแต่งมากมายและเราสามารถสำรวจว่าเกิดอะไรขึ้นจริง ๆ โดยพิมพ์:
+
 ```{r}
 print(bs4Dash::box())
 ```
 
 ## CSS
 
--   [CSS](https://en.wikipedia.org/wiki/CSS) (Cascading Style Sheets) is a computer language that is used to style HTML documents
--   HTML provides the containers, CSS styles them
--   We can write HTML and CSS easily from within R using the `htmltools` package (see `?builder` and `?browsable`)
+- [CSS](https://en.wikipedia.org/wiki/CSS) (Cascading Style Sheets) เป็นชุดคำสั่งที่ใช้ในการกำหนดสไตล์ของเอกสาร HTML
+- HTML จะจัดการการแสดงข้อมูล ส่วน CSS จะให้การจัดสไตล์ รูปแบบ
+- เราสามารถเขียน HTML และ CSS ได้อย่างง่ายด้วยภายใน R โดยใช้แพคเกจ `htmltools` (ดู `?builder` และ `?browsable`)
 
 ```{r}
 browsable(div(
@@ -343,6 +356,12 @@ browsable(div(
     -   IDs are unique identifiers for a single UI elements and are specified using a hashtag `#`
     -   Classes can be given to multiple UI elements and are specified using a dot `.`
 
+## คลาสและไอดี
+
+- ปกติ CSS จะถูกกำหนดโดยใช้คลาสหรือไอดี
+    - ไอดี จะมีความจำเพาะกับแต่ล่ะองค์ประกอบ UI และถูกระบุโดยใช้เครื่องหมาย `#`
+    - คลาสสามารถให้กับองค์ประกอบUIหลายตัว และถูกระบุโดยใช้จุด `.`
+
 ```{r}
 browsable(div(
 	tags$style(
@@ -361,9 +380,9 @@ browsable(div(
 ))
 ```
 
-## HTML elements and CSS
+## องค์ประกอบ HTML และ CSS
 
--   You can change CSS properties of entire HTML elements as well:
+- เราสามารถเปลี่ยนคุณสมบัติ CSS ขององค์ประกอบ HTML ทั้งหมดได้:
 
 ```{r}
 browsable(div(
@@ -382,80 +401,81 @@ browsable(div(
 ))
 ```
 
--   **Question:** Why is `div.cls` green and not blue or black?
--   Combining the knowledge from above:
-    -   `p.cls` changes the properties of all `p` tags with class `cls`
-    -   `#id .cls` changes the properties of all elements with class `cls` within an element of ID `id`
+- **คำถาม:** ทำไม `div.cls` เป็นสีเขียวไม่ใช่สีน้ำเงินหรือสีดำ?
+- ความรู้จากข้างต้น:
+    - `p.cls` เปลี่ยนคุณสมบัติของแท็ก `p` ทั้งหมดที่มีคลาส `cls`
+    - `#id .cls` เปลี่ยนคุณสมบัติขององค์ประกอบทั้งหมดที่มีคลาส `cls` ภายในองค์ประกอบที่มี ID `id`
 
-### CSS properties
+### คุณสมบัติของ CSS
 
--   CSS is build entirely upon so-called properties
--   A complete reference of CSS can be found in the [Mozilla developer docs](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference)
+- CSS สร้างขึ้นตามคุณสมบัติ
+- คุณสมบัติ CSS ทั้งหมดสามารถหาได้ใน[เอกสาร Mozilla developer](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference)
 
-| Property           | Description                                      | Example values                     |
+| คุณสมบัติ            | คำอธิบาย                                  | ค่าตัวอย่าง                     |
 |--------------------|--------------------------------------------------|------------------------------------|
-| `color`            | Sets the color of an element                     | #000, black                        |
-| `background-color` | Sets the color of the element background         | #000, black                        |
-| `display`          | Determines how the element is displayed          | inline, block, flex, grid          |
-| `width`            | Sets the width of an element                     | 10px, 100%, 2em, 1vh               |
-| `height`           | Sets the height of an element                    | 10px, 100%, 2em, 1vh               |
-| `margin`           | Margin between element and parent                | 10px, 100%, 2em, 1vh               |
-| `padding`          | Margin within element                            | 10px, 100%, 2em, 1vh               |
-| `border-color`     | Sets the color of an element border              | #000, black                        |
-| `border-width`     | Sets the width of an element border              | 10px, 100%, 2em, 1vh               |
-| `border-style`     | Sets the style of an element border              | dotted, dashed, solid, double      |
-| `border-radius`    | Sets smooth corners                              | 10px, 100%, 2em, 1vh               |
-| `font-family`      | Sets the font family                             | Arial, Verdana                     |
-| `font-style`       | Sets the font style                              | Normal, italic, oblique            |
-| `font-weight`      | Sets the font boldness                           | normal, bold, 700                  |
-| `font-size`        | Sets the font size                               | 10px, 100%, 2em, 1vh               |
-| `position`         | Determines the general positioning of an element | Absolute, relative, fixed          |
-| `z-index`          | Sets the overlapping order                       | Ranking, i.e. 1000 \> 1 \> 0 \> -1 |
+| `color`            | กำหนดสีขององค์ประกอบ                     | #000, สีดำ                         |
+| `background-color` | กำหนดสีพื้นหลังขององค์ประกอบ             | #000, สีดำ                         |
+| `display`          | กำหนดวิธีที่องค์ประกอบจะแสดง             | inline, block, flex, grid          |
+| `width`            | กำหนดความกว้างขององค์ประกอบ              | 10px, 100%, 2em, 1vh               |
+| `height`           | กำหนดความสูงขององค์ประกอบ                 | 10px, 100%, 2em, 1vh               |
+| `margin`           | ระยะขอบระหว่างองค์ประกอบและองค์ประกอบหลัก | 10px, 100%, 2em, 1vh               |
+| `padding`          | ระยะขอบในองค์ประกอบ                       | 10px, 100%, 2em, 1vh               |
+| `border-color`     | กำหนดสีของเส้นขอบขององค์ประกอบ             | #000, สีดำ                         |
+| `border-width`     | กำหนดความกว้างของเส้นขอบขององค์ประกอบ     | 10px, 100%, 2em, 1vh               |
+| `border-style`     | กำหนดสไตล์ของเส้นขอบขององค์ประกอบ         | จุด, ขีดเขียน, ตรง, คู่        |
+| `border-radius`    | กำหนดมุมที่สวมใส                          | 10px, 100%, 2em, 1vh               |
+| `font-family`      | กำหนดตระกูลฟอนต์                          | Arial, Verdana                     |
+| `font-style`       | กำหนดสไตล์ฟอนต์                           | ปกติ, ตัวเอียง, ตัวเอียงเอน        |
+| `font-weight`      | กำหนดความหนาของฟอนต์                     | ปกติ, หนา, 700                  |
+| `font-size`        | กำหนดขนาดฟอนต์                            | 10px, 100%, 2em, 1vh               |
+| `position`         | กำหนดตำแหน่งทั่วไปขององค์ประกอบ           | Absolute, relative, fixed          |
+| `z-index`          | กำหนดลำดับการซ้อนทับ                      | ลำดับ, เช่น 1000 \> 1 \> 0 \> -1 |
 
-: An incomplete list of common CSS properties
+: รายการของคุณสมบัติ CSS บางส่วน
 
-## Including CSS in R
 
--   CSS can either be defined using inline CSS (`tags$style`) or an external CSS file
--   In the Guerry app, we include a CSS file which takes care of some styling:
-    -   Add a folder called "www" in your app directory
-    -   Add a file called "styles.css" to that folder
-    -   In R, add: `tags$head(includeCSS("www/styles.css"))` to the `dashboardBody`
+## การรวม CSS ใน R
 
-## Example: Removing white space
+-   CSS สามารถกำหนดได้ทั้งในรูปแบบของ CSS แบบอินไลน์ (`tags$style`) หรือไฟล์ CSS ภายนอก
+-   ในแอป Guerry เราใช้ไฟล์ CSS ซึ่งจัดการบางส่วนของการจัดรูปแบบ:
+    -   เพิ่มโฟลเดอร์ที่เรียกว่า "www" ในไดเรกทอรีของแอป
+    -   เพิ่มไฟล์ที่เรียกว่า "styles.css" เข้าไปในโฟลเดอร์นั้น
+    -   ใน R เพิ่ม: `tags$head(includeCSS("www/styles.css"))` เข้าไปในส่วน `dashboardBody`
 
--   During session 6: mapping, you might have noticed a large amount of white space when making the Leaflet map
--   Not a tragedy, but we lose quite a lot of functional space
+## ตัวอย่าง: การลบช่องว่าง
 
+- ในหัวข้อที่ 6: การทำแผนที่ เราอาจจะสังเกตเห็นพื้นที่ว่างจำนวนมากเมื่อทำแผนที่ Leaflet
+- ไม่ได้เป็นเรื่องร้ายแรง แต่เราเสียพื้นที่ที่ใช้งาน
 ![](resources/white_space.png)
 
-### Diagnosis
+### การวินิจฉัย
 
--   Cause: `bs4Dash::box()` reserves some space in its header and body for some reason
--   How do we know?
-    1.  Right click on the white space
-    2.  Open the inspector
-    3.  Look out for the properties "padding" or "margin", usually the culprits in terms of white space
-    4.  Disable them to see what changes
+- สาเหตุ: `bs4Dash::box()` สงวนพื้นที่บางส่วนในส่วนหัวและส่วนbodyของมัน
+- เราทราบอย่างไร
+    1. คลิกขวาที่พื้นที่ว่าง
+    2. เปิดตัวตรวจสอบ
+    3. มองหาคุณสมบัติ "padding" หรือ "margin" ซึ่งเป็นตัวเกี่ยวข้องพื้นที่ว่าง
+    4. ปิดใช้งานเพื่อดูว่าจะเปลี่ยนแปลงอย่างไร
 
 ![](resources/07_01.gif)
 
-### Fix
+### การแก้ไข
 
--   Bad news: We can't fix this using R alone as the values are given by AdminLTE, `bs4Dash`'s CSS framework
--   Good news: This is a really nice use case for custom CSS styling
--   Using the Inspect tool, we add `padding: 0px;` to both the box header and body directly
+- ข่าวร้าย: เราไม่สามารถแก้ไขปัญหานี้โดยใช้ R เพียงอย่างเดียว เนื่องจากค่าพวกนี้มาจาก AdminLTE, เฟรมเวิร์ก CSS ของ `bs4Dash`
+- ข่าวดี: เป็นตัวอย่างสำหรับการปรับแต่ง CSS เอง
+- เราเพิ่ม `padding: 0px;` เข้าไปในส่วนหัวของกล่องและส่วนตัวโดยตรงด้วยการใช้เครื่องมือตรวจสอบ 
 
 ![](resources/07_02.gif)
 
-### Permanent fix
 
--   Our fix with the Inspect tool is lost as soon as we close or reload the tab
--   To fix the padding permanently, we need to make changes to the HTML class
--   **Question:** What HTML class do we need to amend? Which HTML element is responsible for the faulty white space?
+### การแก้ไขถาวร
+
+- การแก้ไขของเราด้วยเครื่องมือตรวจสอบจะหายไปเมื่อเราปิดหรือโหลดแท็บใหม่
+- เพื่อแก้ไขถาวร เราจำเป็นต้องทำการเปลี่ยนแปลงที่ไฟล์ในคลาส HTML
+- **คำถาม:** เราต้องแก้ไขคลาส HTML อันไหน องค์ประกอบ HTML ไหนที่รับผิดชอบในการเว้นช่องว่างที่ไม่ถูกต้อง
 
 ::: callout-tip
-If you are not sure what element does what, try to hover over the element in the HTML pane. The respective space is then highlighted directly on the website!
+หากไม่แน่ใจว่าองค์ประกอบไหนทำหน้าที่อะไร ลองเลื่อนเมาส์ไปที่องค์ประกอบในแท็บ HTML แล้วจะเห็นไฮไลต์ส่วน ที่เกี่ยวข้องในที่เว็บไซต์โดยตรง
 :::
 
 ![](resources/white_space_html.png)
@@ -465,6 +485,11 @@ If you are not sure what element does what, try to hover over the element in the
 -   Now that we know what properties to change and where, we can start writing CSS
 -   Either in a dedicated `styles.css` file or using `tags$style` inside the UI code, we put the following CSS lines:
 
+### การฝัง CSS
+
+- ตอนนี้ที่เรารู้ว่าคุณสมบัติที่จะเปลี่ยนและที่จะแก้ไขอยู่ตรงไหน ก็เริ่มเขียน CSS ได้
+- ไม่ว่าจะอยู่ในไฟล์ `styles.css` หรือใช้ `tags$style` ภายในโค้ด UI เราเพียงเพิ่มบรรทัด CSS ต่อไปนี้:
+
 ``` {.CSS filename="styles.css"}
 /* remove white space around maps in boxes */
 #exp_box .card-header, #exp_box .card-body {
@@ -472,22 +497,23 @@ If you are not sure what element does what, try to hover over the element in the
 }
 ```
 
--   In other words: For the class `card-header` and `card-body` inside the object with ID `exp_box`, set the padding to 0 pixels
+- อีกนัยหนึ่ง: สำหรับคลาส `card-header` และ `card-body` ภายในองค์ประกอบที่มี ID `exp_box` ให้ตั้งค่าขอบเขต (padding) เป็น 0 พิกเซล
 
 ::: callout-note
-## Exercise
+## แบบฝึกหัด
 
-Change the CSS styling of the text paragraphs in the Home tab. Create a CSS class called `par` and change font family, size, weight, type, alignment and justification
+เปลี่ยนการจัดรูปแบบ CSS ของย่อหน้าข้อความในแท็บ "หน้าหลัก" สร้างคลาส CSS ที่ชื่อว่า `par` และเปลี่ยนตัวแปรฟอนต์, ขนาด, น้ำหนัก, ประเภท, การจัดวางและการชิดขอบ:
 :::
 
 ::: {.callout-tip collapse="true"}
-Some of the CSS properties were introduced in subsection "CSS properties", but others are new. In any case, there are a lot of good resources just one Google search away.
+
+บางส่วนของคุณสมบัติ CSS ดูได้ในหัวข้อ "คุณสมบัติ CSS" แต่บางส่วนก็ใหม่ อย่างไรก็ตามแนะนำให้ดูตามแหล่งข้อมูลตามเว็บอื่นๆดูครับ ลองค้นดู
 :::
 
 ::: {.callout-warning collapse="true"}
 ## Solution
 
-Either in `styles.css` or inline, add the following CSS code:
+ใส่ code CSS นี้ ใน `styles.css` หรือในแบบ inline:
 
 ``` css
 /* text formatting */
@@ -502,7 +528,7 @@ p.par {
 }
 ```
 
-In R, you need to add the class `par` to all paragraphs in the UI tab:
+ใน R เราต้องเพิ่ม class `par` ในทุก paragraphs ใน UI tab:
 
 ```{r eval=FALSE}
 p("text", class = "par")

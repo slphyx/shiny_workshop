@@ -1,5 +1,5 @@
 ---
-title: "Modelling and visualizing data"
+title: "การทำโมเดลและนำเสนอข้อมูล"
 editor: visual
 ---
 
@@ -60,67 +60,67 @@ data_guerry <- Guerry::gfrance85 %>%
   select(Region:Department, all_of(names(variable_names)))
 ```
 
-You will learn how to:
+ในหัวข้อนี้เราจะเรียนรู้:
 
--   Embed plots and diagrams from ggplot2 in Shiny apps
--   Make your plots interactive using Plotly
--   Explore issues using the power of interactive visualization dashboards
--   Visualize a regression analysis in Shiny
+-   การใส่พวกกราฟและไดอะแกรมต่างจาก ggplo2 ใน Shiny
+-   การทำกราฟแบบมี interactive ด้วย Plotly
+-   การนำเสนอแบบ interactive ด้วย dashboards
+-   นำเสนอผลลัพธ์จากการทำ regression ใน Shiny
 
-# Interactive visualization: The core of Shiny
+# การนำเสนอแบบ Interactive: หัวใจสำคัญของ Shiny
 
--   Shiny offers the perfect basis for visualization
-    -   Plots can be modified using UI inputs
-    -   Seamless integration of interactivity elements (e.g. pan, zoom)
-    -   Dashboards facilitate the idea of side-by-side comparison or provision of context
+-   Shiny มีสิ่งจำเป็นสำหรับการนำเสนอต่างๆ
+    -   พวก Plots ต่างๆ สามารถปรับเปลี่ยนผ่าน UI inputs
+    -   พวกปฏิสัมพันธ์กับกราฟอย่าง การซูมเข้า/ออกก็มีให้เรียบร้อย
+    -   พวก Dashboards ก็ช่วยเหลือการทำความเข้าใจหรือการเปรียบได้ดี 
 
-## Good practice examples
+## ตัวอย่าง 
 
--   Examples of these concepts can be seen in many Shiny apps, one example is Edward Parker's [COVID-19 tracker](https://vac-lshtm.shinyapps.io/ncov_tracker/)
+-   ตัวอย่าง app เกี่ยวกับเรื่อง COVID-19 ของ Edward Parker [COVID-19 tracker](https://vac-lshtm.shinyapps.io/ncov_tracker/)
 
 ::: callout-note
 ## Exercise
 
-Explore the COVID-19 tracker. Do you think this is a good Shiny app? If so, why? If not, why not?
+ให้ทดลองเล่น app COVID-19 tracker คืดว่า app นี้เป็นตัวอย่างที่ดีหรือไม่ เพราะอะไร
 :::
 
 ![COVID-19 Tracker](https://raw.githubusercontent.com/eparker12/nCoV_tracker/master/www/app_image.png)
 
-## Current app state
+## สถานะของ app 
 
--   Unlike the previous sections, we will extend the existing app code step by step
--   The code chunk below includes the current app state including the intro and table tabs
--   Quick recap:
-    -   In section 3, we added an introduction tab that contains background info on the app
-    -   In section 4, we added a table tab using the `DT` package
-    -   In this section, we will add a tab that analyzes Guerry using all sorts of visualization
+-   ในหัวข้อนี้เราจะค่อย ๆ ปรับปรุง app ของเรากัน
+-   code ด้านล่างนี้คือ app ที่เรามี มันจะมีตัวอย่างการใช้ table tabs
+-   ทบทวน:
+    -   ในหัวข้อที่ 3 เราใส่ tab ที่มีคำอธิบาย app
+    -   ในหัวข้อที่ 4 เราเพิ่ม table tab โดยใช้ `DT` package
+    -   ในหัวข้อนี้เราจะเพิ่ม tab ที่เกี่ยวกับการวิเคราะห์ข้อมูลของ Guerry 
 
 ```{r eval=FALSE, file="shinyapps/guerry/states/05_visualization00.R"}
 #| code-fold: true
 #| code-summary: Full code for the current app state
 ```
 
-## Further resources
+## แหล่งข้อมูลเพิ่มเติม
 
--   [Chapter "Graphics"](https://mastering-shiny.org/action-graphics.html) in Hadley Wickham's Mastering Shiny
--   ["Server-side linking with shiny"](https://plotly-r.com/linking-views-with-shiny.html) in Carson Sievert's Plotly book
+-   [Chapter "Graphics"](https://mastering-shiny.org/action-graphics.html) Hadley Wickham's Mastering Shiny
+-   ["Server-side linking with shiny"](https://plotly-r.com/linking-views-with-shiny.html) หนังสือ Plotly ของ Carson Sievert
 
-# Plotting in Shiny
+# การ Plot ใน Shiny
 
--   Inserting plots in Shiny apps works just like any other UI component
--   You need two things: `plotOutput()` (or similar) in the UI and `renderPlot()` (or similar) in the server function
-    -   [`plotOutput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/plotoutput) creates the empty element in the UI where the plot will go
-    -   [`renderPlot()`](https://shiny.posit.co/r/reference/shiny/1.7.4/renderplot) renders the plot and updates the UI element every time a reactive dependency is invalidated
+-   การใส่พวกกราฟหรือplot ก็เหมือนกับใส่องค์ประกอบตัวควบคุมอื่นใน UI 
+-   เราต้องการเพียงคำสั่ง: `plotOutput()` ใน UI กับ `renderPlot()` ในส่วนของ server
+    -   [`plotOutput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/plotoutput) สร้างที่บน UI สำหรับใส่กราฟ
+    -   [`renderPlot()`](https://shiny.posit.co/r/reference/shiny/1.7.4/renderplot )สร้างกราฟแล้วเอาไปใส่ที่ที่เตรียมไว้บน UI
 
-## A new section for the Guerry app
+## เพิ่ม section ใหม่ใน Guerry app
 
--   To exemplify what Shiny can do with visualizations, we add a new tab to the app called "Model data"
--   The goal is to explore the relationships among Guerry variables
--   **Question**: If you think about a Shiny app that explores the relationships within a dataset, what types of visualizations come into your mind first?
+-   เพิ่ม tab ใหม่ใน app และเรียกมันว่า "Model data"
+-   จุดประสงค์เพื่อดูความสัมพันธ์ของตัวแปรต่างๆ 
+-   **คำถาม**: ถ้าเราจะดูเรื่องความสัมพันธ์ระหว่างตัวแปร ความจะนำเสนอในรูปแบบอะไร
 
-## Setting up the UI element
+## ใส่ส่วนประกอบใน UI 
 
--   Taking our Shiny app as an example, we add another tab:
+-   ลองดูที่ code ว่าเราใส่ tab เพิ่มอย่างไร:
 
 ```{r eval=F}
 model <- tabItem(              # <1>
@@ -139,12 +139,12 @@ model <- tabItem(              # <1>
 )
 ```
 
-1.  Create a tab item called "tab_model"
-2.  Create an initial layout containing a fluid row with one column and one box
-3.  Create a plot output widget
+1.  สร้าง tab item เรียก "tab_model"
+2.  สร้างรูปแบบ layout เริ่มต้นที่ใช้ fluid row กับ 1 column และ 1 กล่อง box
+3.  ใส่ที่สำหรับกราฟ 
 
--   The newly created tab Item has the tab name `tab_model`
--   We already created other tabs item called `tab_intro` and `tab_tabulate`, so we can tell where our new tab item goes:
+-   tab Item ที่ใส่ใหม่ชื่อ `tab_model`
+-   เรามี tabs item อยู่แล้วที่ชื่อ `tab_intro` กับ `tab_tabulate`:
 
 ```{r eval=FALSE}
 dashboardPage(
@@ -174,14 +174,14 @@ dashboardPage(
 )
 ```
 
-1.  Create the respective menu items in the sidebar. Don't forget to match the tab names!
-2.  Create the tab items within the body. The function `tabItems()` contains all tab objects. We add our newly created `tab_model` object after the introduction. Again, the order and names of `tabItem()`s corresponds to the order and names of `menuItem()`s!
+1.  ใส่ menu items ที่ sidebar อย่าลืมใส่ชื่อให้ตรงกับ tab
+2.  ใส่ tab items ในตัว body  ซึ่ง`tabItems()` จะมีตัวรวบรวมtabทั้งหมด  ตัว `tab_model` ใส่ต่อจากintroduction และชื่อของ`tabItem()`ต้องตรงตามลำดับกับชื่อใน `menuItem()`
 
-## Filling with contents
+## ใส่เนื้อหา
 
--   Pretty easy so far!
--   On the server side we do the plotting
--   Here, we use [`ggpairs`](https://ggobi.github.io/ggally/reference/ggpairs.html) from the [`GGally`](https://ggobi.github.io/ggally/) package, but you can use anything that produces a plot
+-   ใส่อะไรก็ได้ที่อยากใส่
+-   เราใส่พวกทำ plotting ต่าง ๆที่ server 
+-   ในที่นี้เราใช้ [`ggpairs`](https://ggobi.github.io/ggally/reference/ggpairs.html) จาก [`GGally`](https://ggobi.github.io/ggally/) package จริงๆ จะใช้อะไรก็ได้ที่เกี่ยวข้องกับการทำกราฟ
 
 ```{r eval=F}
 output$pairplot <- renderPlot({                             # <1>
@@ -190,41 +190,40 @@ output$pairplot <- renderPlot({                             # <1>
 })
 ```
 
-1.  The `renderPlot()` function accepts an expression that produces a plot
-2.  Clean the data before plotting
-3.  `ggpairs()` creates a ggplot2 object which starts a plotting device in its print method
-
+1.  `renderPlot()` จะรับชุดคำสั่งที่มีการสร้างกราฟ
+2.  เตรียมข้อมูลให้พร้อมสำหรับการplot
+3.  `ggpairs()` เป็นคำสั่งสำหรับสร้างกราฟอันหนึ่งจาก ggplot2 
 ![](resources/05_01.png)
 
-## Full code
+## code ตัวเต็ม
 
 ```{r eval=FALSE, file="shinyapps/guerry/states/05_visualization01.R"}
 #| code-fold: true
 #| code-summary: Full code for basic plotting
 ```
 
-## Limitations
+## ข้อจำกัด
 
--   The code to create a plot in a Shiny app is quite simple so far, but has not many advantages over plain plotting in the R console
--   To really make it shine, we need three features:
-    -   Reactivity
-    -   Interactivity
-    -   Contextuality
+-   code ที่ใช้ในการplotนี้เป็นแบบอย่างง่าย ที่ดูไม่ค่อยจะต่างจากคำสั่งplot ต่างๆที่มาด้วยกับ R
+-   ถ้าอยากเห็นที่มันแตกต่าง ต้องดูในคุณสมบัติทั้ง 3 นี้:
+    -   Reactivity ปฏิกิริยา
+    -   Interactivity โต้ดอบ
+    -   Contextuality บริบท
 
-# Reactivity
+# Reactivity ปฏิกิริยา
 
--   Reactivity means adding reactive dependencies
--   Currently, we hardcode the variables, but we can also make the user decide on them
+-   Reactivity หมายถึงเพิ่มตัวที่ขึ้นกับ reactive นั้นๆ
+-   ในที่นี้เราพิมพ์ใส่ชื่อตัวแปรลงไป แต่ผู้ใช้ก็สามารถที่จะเลือกได้
 
-## Adding UI inputs
+## การใส่ input ต่าง ๆ ใน UI
 
--   Here, we add three user inputs
-    -   [`selectInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/selectinput) to select a single x variable (defaults to Literacy)
-    -   [`selectizeInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/selectinput) to select multiple y variables (defaults to Commerce)
-    -   [`checkboxInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/checkboxinput) to determine whether to standardize or not
+-   ตอนนี้เราใช้ Inputsอยู่ 3 แบบ
+    -   [`selectInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/selectinput) เพื่อเลือกตัวแปร x (ค่าเริ่มต้นคือ Literacy)
+    -   [`selectizeInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/selectinput) เพื่อเลือกตัวแปร y (ค่าเริ่มต้นคือ Commerce)
+    -   [`checkboxInput()`](https://shiny.posit.co/r/reference/shiny/1.7.4/checkboxinput) เพื่อเป็นทางเลือกว่าจะทำ standardize หรือไม่
 
 ::: callout-note
-To avoid overreactivity, we add an [`actionButton()`](https://shiny.posit.co/r/reference/shiny/1.7.4/actionbutton) which needs to be pressed for the user input to take effect.
+เราใส่ปุ่ม [`actionButton()`](https://shiny.posit.co/r/reference/shiny/1.7.4/actionbutton) เพื่อให้ผู้ใช้กดเพื่อดูผลหลังจากเหลือ Inputs ต่างๆ 
 :::
 
 ```{r eval=F}
@@ -279,20 +278,19 @@ model <- tabItem(
 )
 ```
 
-1.  Create a new column + box to hold our new input UI
-2.  Create a `selectInput()` to select a single x variable. By passing a named list to the `choices` argument, the list names are shown to the user and the list values are sent to the server!
-3.  Create a `selectizeInput()` to select multiple y variables
-4.  Create a `checkboxInput()` to let users decide whether to standardize variables or not
-5.  Create an `actionButton()` that needs to be pressed for changes to take effect
+1.  สร้าง column กับ box ใหม่สำหรับใส่ Inputs ต่างๆ
+2.  สร้าง `selectInput()` สำหรับเลือกตัวแปร x  โดยใส่รายชื่อตัวแปรที่จะเลือกทั้งหมดใน `choices` 
+3.  สร้าง `selectizeInput()` สำหรับเลือกตัวแปร y 
+4.  ใส่ `checkboxInput()` ให้ผู้ใช้เลือกว่าจะ standardize ตัวแปรหรือไม่
+5.  สร้างปุ่ม `actionButton()` เพื่อส่งให้ทำการคำนวณตามค่า Inputs ต่างๆที่เลือกไป
 
-## Accessing the new UI inputs
+## การเข้าถึง UI inputs ที่ใส่เข้าไปใหม่
 
--   On the server side, we need to deal with the new inputs
--   **Question:** Which new UI inputs did we add? How can we access them on the server side?
--   We add a new reactive that cleans the data
+-   **คำถาม:** UI inputs อันไหนที่เราเพิ่งใส่เข้าไป แล้วเราจะเข้าถึงค่าของมันจากฝั่ง server ได้อย่างไร
+-   เราใส่ตัว reactive ใหม่สำหรับ **clean** ข้อมูล
 
 ::: callout-note
-[`bindEvent`](https://shiny.posit.co/r/reference/shiny/1.7.4/bindevent) ensures that the user input is only applied when the `actionButton()` is pressed! You can try to remove this safety measure and observe how the plot struggles to keep up when selecting multiple variables.
+[`bindEvent`](https://shiny.posit.co/r/reference/shiny/1.7.4/bindevent) เพื่อให้มั่นใจว่าจะคำนวณใหม่โดยใช้ค่า inputที่ใส่เข้ามาหลังจากกดปุ่ม `actionButton()` เท่านั้น  ลองเอาออก แล้วดูว่าเกิดอะไรขึ้น
 :::
 
 ```{r eval=F}
@@ -310,32 +308,32 @@ output$pairplot <- renderPlot({
 })
 ```
 
-1.  Create a reactive expression that takes care of data cleaning and stores the cleaned data in a reactive object called `dat`
-2.  Execute the reactive expression (and thus update `dat`), if and only if the refresh button is pressed
-3.  Create a pairs plot using the newly created `dat()` object. This is the same as the `dt` dataframe that we used before with the difference that `dat()` updates every time `input$model_x`, `input$model_y` or `input$model_std` are changed.
+1.  สร้าง reactive expression ที่คอยดูเรื่อง cleaning และจัดเก็บข้อมูลในตัวแปร reactive object ชื่อ `dat`
+2.  ซึ่ง reactive expression ที่อยู่ใน `reactive` จะถูกรันใหม่(หรืออัพเดทค่า `dat`) ก็ต่อเมื่อปุ่มrefresh ถูกกด
+3.  สร้าง pairs plot โดยใช้ค่าจาก `dat()`  เช่นเดียวกันกับ `dt` dataframe ที่เราใช้ก่อนหน้านี้ เพียงแต่ว่า ตัว`dat()` จะมีการอัพเดทค่าทุกครั้งที่ค่าของ `input$model_x` `input$model_y` หรือ `input$model_std` มีการเปลี่ยนแปลง
 
 ![](resources/05_02.gif)
 
--   The plot now reacts to user input and updates its appearance when the user selection changes!
+-   ตัวกราฟจะมีผลเปลี่ยนแปลงทันทีที่ผู้ใช้เลือกหรือเปลี่ยน Inputs
 
-## Full code
+## code ตัวเต็ม
 
 ```{r eval=FALSE, file="shinyapps/guerry/states/05_visualization02.R"}
 #| code-fold: true
 #| code-summary: Full code for reactive plotting
 ```
 
-# Interactivity
+# Interactivity โต้ตอบ
 
--   Currently, our plot is a static image
--   Static images are fine for reports or print articles, but Shiny features much more than that
--   Base Shiny features interactive components like click, double click, hover or brush events (see [Chapter 7.1](https://mastering-shiny.org/action-graphics.html#interactivity) in Mastering Shiny)
--   Here, we'd like to go a bit further and implement Plotly plots
+-   ตอนนี้ภาพกราของเรายังเป็นแบบนิ่ง ๆ 
+-   กราฟแบบนิ่งๆนี้ก็เหมาะกับรายงานหรือบทความทั่วไป แต่ Shiny ได้มากกว่านั้น
+-   คุณสมบัติของ Shiny พื้นฐานสำหรับ โต้ตอบก็มีอย่างเช่น คลิ๊ก ดับเบิ้ลคลิ๊ก วางค้างไว้ หรือ ลากคลุมเพื่อเลือก (ดูเพิ่มเติมที่ [Chapter 7.1](https://mastering-shiny.org/action-graphics.html#interactivity))
+-   ในที่นี้เราจะลองใช้กราฟที่ทำจาก Plotly
 
 ## Plotly
 
--   [Plotly](https://plotly.com/) is an open-source library to create charts that can be interacted with in various ways
--   It supports several programming languages including R and works seamlessly with Shiny
+-   [Plotly](https://plotly.com/) เป็นlibrary สำหรับสร้างกราฟที่มีการโต้ตอบกับผู้ใช้
+-    Plotly สามารถใช้ได้กับหลายภาษา ซึ่งรวมถึง R และ Shiny ด้วย
 
 ```{r}
 #| code-fold: true
@@ -361,11 +359,11 @@ plot_ly(
   ))
 ```
 
-## Plotly and Shiny
+## Plotly กับ Shiny
 
--   Plotly requires similar components as plain plotting:
-    -   [`plotlyOutput()`](https://rdrr.io/cran/plotly/man/plotly-shiny.html) creates the UI component
-    -   [`renderPlotly()`](https://rdrr.io/cran/plotly/man/plotly-shiny.html) does the plotting and updates the UI component
+-   คำสั่งสำหรับการแสดงผลกราฟจาก Plotly ก็เหมือนกันกับก่อนหน้านี้:
+    -   [`plotlyOutput()`](https://rdrr.io/cran/plotly/man/plotly-shiny.html) สำหรับสร้าง UI เพื่อแสดงผล
+    -   [`renderPlotly()`](https://rdrr.io/cran/plotly/man/plotly-shiny.html) สำหรับสร้างกราฟเพื่อไปแสดงผลบน UI ที่เตรียมไว้
 
 ```{r eval=F}
 model <- tabItem(
@@ -419,12 +417,12 @@ model <- tabItem(
 )
 ```
 
-1.  This is the only thing that changes on the UI side when implementing Plotly. Plotly does not produce regular static plots and thus needs a special output widget.
+1.  สิ่งที่เปลี่ยนเข้าไปคือการใช้ Plotly ซึ่งต้องการ Ouput เฉพาะของตัวเอง  (`plotlyOutput`)
 
-## `ggplotly` on the server side
+## `ggplotly` ในฝั่งของ server
 
--   Plotly introduces a very comprehensive plotting system centered around the [`plot_ly()`](https://rdrr.io/cran/plotly/man/plot_ly.html) function
--   Lucky for us, all we have to do is call [`ggplotly()`](https://rdrr.io/cran/plotly/man/ggplotly.html) on our ggplot object to convert it to a plotly object
+-   Plotly มีระบบการplotหรือสร้างกราฟต่างๆของตัวเองที่ดีมาก [`plot_ly()`](https://rdrr.io/cran/plotly/man/plot_ly.html)
+-   ซึ่งก็เป็นโชคของเราที่เราเพียงเรียกใช้ [`ggplotly()`](https://rdrr.io/cran/plotly/man/ggplotly.html) กับตัวกราฟที่สร้างจาก ggplot มันก็จะถูกเปลี่ยนเป็นไปใช้ plotly แทน
 
 ```{r eval=F}
 dat <- reactive({
@@ -442,36 +440,35 @@ output$pairplot <- plotly::renderPlotly({                # <1>
 })
 ```
 
-1.  As Plotly plots are not static plots, we need to use a special rendering function called `plotly::renderPlotly()`
-2.  Just as on the UI side, we need not change much on the server side. Just wrap your ggplot2 object in a call to `plotly::ggplotly()`.
+1.  ตัวplot จาก Plotly ไม่ใช่แบบกราฟนิ่งๆแล้ว เราก็ต้องการสร้างกราฟเฉพาะคือ `plotly::renderPlotly()`
+2.  ในขณะเดียวกันเราก็ต้องเปลี่ยนกราฟของเราจาก ggplot ให้เป็นแบบ plotly ด้วย `plotly::ggplotly()`
 
 ![](resources/05_03.gif)
 
-## Extending Plotly
+## ขยายการใช้งาน Plotly
 
--   So far we made ggplot2 plots and converted them to Plotly charts using a single function call
--   Many aspects of Plotly charts remain out of control as we are not using the `plot_ly()` function
+-   ตอนนี้เราสามารถเป็นกราฟจาก ggplot ให้เป็น plotly ได้ด้วยคำสั่งเดียว 
+-   แต่หลายๆส่วนของ plot ก็ยังใช้ไม่ได้เพราะเราไม่ได้สร้างกราฟจากคำสั่ง `plot_ly()` โดยตรง
 
-### Plotly's customization functions
+### การแก้ไขปรับแต่ง Plotly 
 
--   We can extend Plotly objects using three functions:
-    -   `layout()` changes the plot organisation (think [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html)), e.g.:
-        -   colors, sizes, fonts, positions, titles, ratios and alignment of all kinds of plot elements
-        -   `updatemenus` adds buttons or drop down menus that can change the plot style or layout (see [here](https://plotly.com/r/dropdowns/) for examples)
-        -   `sliders` adds sliders that can be useful for time series (see [here](https://plotly.com/r/sliders/) for examples)
-    -   `config()` changes interactivity configurations, e.g.:
-        -   The `modeBarButtons` options and `displaylogo` control the buttons in the mode bar
-        -   `toImageButtonOptions` controls the format of plot downloads
-        -   `scrollZoom` enables or disables zooming by scrolling
-    -   `style()` changes data-level attributes (think [`ggplot2::scale_`](https://ggplot2.tidyverse.org/reference/#scales)), e.g.:
-        -   `hoverinfo` controls whether tooltips are shown on hover
-        -   `mode` controls whether to show points, lines and/or text in a scatter plot
-        -   `hovertext` modifies the tooltips texts shown on hover
+-   เราสามารถปรับแต่งกราฟจาก Plotly ได้โดยอาศัย 3 คำสั่งนี้:
+    -   `layout()` สำหรับปรับเปลี่ยนหน้าตาของกราฟ อย่างเช่น สี ฟ้อนท์ ขนาด ตำแหน่ง สัดส่วน และอื่นๆ (เช่นเดียวกันกับ [`ggplot2::theme()`](https://ggplot2.tidyverse.org/reference/theme.html))
+        -   `updatemenus` ใส่ปุ่มหรือเมนูสำหรับเปลี่ยน layout ( [ดูที่นี่](https://plotly.com/r/dropdowns/) สำหรับตัวอย่าง)
+        -   `sliders` ใส่ sliders ([ดูที่นี่](https://plotly.com/r/sliders/) สำหรับตัวอย่าง)
+    -   `config()` เปลี่ยนการตั้งค่าการโต้ตอบ:
+        -   `modeBarButtons` กับ `displaylogo` ควบคุมปุ่มใน mode bar
+        -   `toImageButtonOptions` ควบคุมรูปแบบ downloads
+        -   `scrollZoom` ควบคุมว่าให้มีการซูมด้วยการ scroll หรือไม่
+    -   `style()` เปลี่ยนพวกสไตล์ (คล้ายๆกับ [`ggplot2::scale_`](https://ggะplot2.tidyverse.org/reference/#scales)) เช่น:
+        -   `hoverinfo` ควบคุมว่าจะให้โชว์ tooptip หรือไม่เวลาวางลูกศรชี้ไว้
+        -   `mode` ความคุมว่าจให้โชว์ จุด เส้น หรือ ข้อความใน scatter plot หรือไม่
+        -   `hovertext` แก้ไขข้อความใน tooltips
 
-### Schema
+### Schema ผังการปรับแต่ง
 
--   The actual number of options is immense!
--   You can explore all options by calling [`plotly::schema()`](https://rdrr.io/cran/plotly/man/schema.html)
+-   options มันเยอะมาก
+-   ถ้าอยากดูทั้งหมด ลองพิมพ์เรียก [`plotly::schema()`](https://rdrr.io/cran/plotly/man/schema.html)
 
 ```{r eval=FALSE}
 plotly::schema()
@@ -488,9 +485,9 @@ tags$iframe(srcdoc = paste(readLines(path), collapse = '\n'), width = "100%", he
 unlink(path)
 ```
 
-### Example
+### ตัวอย่าง
 
--   For our app, we can clean up the mode bar and enhance the plot download
+-   เราสามารถปรับเปลี่ยนในส่วน mode bar กับ การ download ได้
 
 ```{r eval=FALSE}
 ggplotly(p) %>%
@@ -510,39 +507,39 @@ ggplotly(p) %>%
 	)
 ```
 
-1.  Removes specified buttons from the modebar
-2.  Removes the Plotly logo
-3.  Changes the output of snapshots taken of the plot. Setting `height` and `width` to `NULL` keeps the aspect ratio of the plot as it is shown in the app.
-4.  Enables zooming through scrolling
+1.  เลือกเอาปุ่มออกจาก modebar
+2.  เอา logo ออก
+3.  เซ็ตค่า `height` กับ `width` เป็น `NULL` เพื่อที่จะให้สัดส่นของกราฟหรือภาพเป็นตามที่โชว์ในapp
+4.  ให้ใช้ zooming ได้
 
 ![](resources/05_03_config.png)
 
-## Full code
+## Full ตัวเต็ม
 
 ```{r eval=FALSE, file="shinyapps/guerry/states/05_visualization03.R"}
 #| code-fold: true
 #| code-summary: Full code for interactive visualization
 ```
 
-# Contextuality
+# Contextuality บริบท
 
--   By contextuality, we loosely understand how we perceive charts in context
--   Just showing a simple graph can be more than enough to convey a message
--   In many cases though, we need more than one figure to lead an argument
--   A lot of the times it helps to see figures side-by-side
--   Regular plotting: Interactivity and reactivity possible, but *no contextuality*
--   Embedded plotting: Contextuality provided, but interactivity and reactivity mostly impossible (e.g. in a report or a paper)
+-   ด้วยความเป็นบริบท (contextuality), เราเข้าใจโดยคร่าวว่าเรารับรู้แผนภูมิในบริบท
+-	การแสดงแกราฟอย่างง่าย ๆ อาจเป็นสิ่งที่เพียงพอในการสื่อข้อความ
+-	แต่ในหลาย ๆ กรณี, เราต้องการภาพรวมมากกว่าหนึ่งเพื่อนำเสนอเรื่องราวหรือเน้นเรื่อง
+-	หลายครั้ง การมองภาพรวมอยู่ข้าง ๆ กันช่วยให้เราเข้าใจมากขึ้น
+-	การพล็อตแบบปกติ: สามารถมีการโต้ตอบและตอบสนองได้ แต่ *ไม่มีความเป็นบริบท*
+-	การพล็อตแบบฝัง: มีความเป็นบริบท แต่การโต้ตอบและตอบสนองนั้นเป็นไปได้ยาก (เช่น ในรายงานหรือบทความวิชาการ)
 
-## Good practices
+## แนวปฏิบัติที่ดี
 
--   Appsilon's [US bee colony monitor](https://connect.appsilon.com/bee-colony/) provides an easy way to compare aggregated numbers, between-state and within-state distributions side-by-side
--   With a little bit of creativity, Shiny can be a very competent story teller (for an impressive example, take a look at John Coene's [Freedom of Press Shiny app](https://johncoene.shinyapps.io/fopi-contest/))
+-   [ตัวติดตามรังผึ้งของ US จาก Appsilon](https://connect.appsilon.com/bee-colony/) ให้ความสะดวกในการเปรียบเทียบตัวเลขที่รวมกัน ระหว่างรัฐและภายในรัฐด้วยกัน
+-   ด้วยความคิดสร้างสรรค์เล็ก ๆ น้อย ๆ, Shiny สามารถเป็นผู้บรรยายเรื่องราวที่มีความสามารถอย่างมาก (สำหรับตัวอย่างที่น่าประทับใจ, ลองดูที่แอป Shiny ของ John Coene [Freedom of Press Shiny app](https://johncoene.shinyapps.io/fopi-contest/))
 
-## Extending the layout
+## การขยายรูปแบบการแสดงผล
 
--   Here, we will extend our lonely plot with a regression analysis to tell the full story of the associations of the Guerry indicators
--   We add three types of visualization: a coefficient plot, a scatter plot and a regression table
--   The three plots are tucked in a [`tabBox`](https://rinterface.github.io/bs4Dash/reference/tabBox.html), a [`bs4Dash::box`](https://rinterface.github.io/bs4Dash/reference/box.html) that supports tab panels
+-   เราจะขยายการแสดงผลที่เรามีอยู่ด้วยการวิเคราะห์การถดถอยเพื่ออธิบายเกี่ยวกับการเชื่อมโยงของตัวแปรตัวบ่งชี้ของ Guerry
+-   เราเพิ่มสามแบบของการแสดงผลภาพ: แผนภูมิแสดงค่าสัมประสิทธิ์, แผนภูมิกระจาย และตารางการถดถอย
+-   ทั้งสามแบบของการแสดงผลถูกใส่ไว้ใน [`tabBox`](https://rinterface.github.io/bs4Dash/reference/tabBox.html)   [`bs4Dash::box`](https://rinterface.github.io/bs4Dash/reference/box.html) ซึ่งรองรับ tab panels
 
 ```{r eval=F}
 model <- tabItem(
@@ -617,16 +614,16 @@ model <- tabItem(
 )
 ```
 
-1.  Adds a new `tabBox()` which can contain multiple `tabPanel()`
-2.  Specify the appearance of the tabs. `pills` fills the entire tab panel with the status color while `tabs` is more subtle in its coloring.
-3.  Add a tab that holds a Plotly coefficient plot
-4.  Add a tab that holds a Plotly scatter plot
-5.  Add a tab that holds a HTML regression table
+1.  เพิ่ม `tabBox()` ใหม่ซึ่งสามารถรองรับ `tabPanel()` หลายๆแท็บ
+2.  ระบุลักษณะการแสดงผลของแท็บ `pills` จะเติมสีให้กับทั้งหมดของแท็บแผงตามสถานะ ในขณะที่ `tabs` มีการเติมสีอย่างอ่อนโยนมากขึ้น 
+3.  เพิ่มแท็บที่มีแผนภูมิแสดงค่าสัมประสิทธิ์จาก Plotly
+4.  เพิ่มแท็บที่มีแผนภูมิกระจายจาก Plotly
+5.  เพิ่มแท็บที่มีตารางการถดถอยแบบ HTML
 
-## Digesting the new layout
+## การทำความเข้าใจรูปแบบใหม่
 
--   **Question:** What did we add here? Which outputs need to be filled with content?
--   On the server side, we extend our reactive object with a linear regression model
+-   **คำถาม:** เราได้เพิ่มอะไรบ้างในที่นี่ ผลลัพธ์ใดที่ต้องการเนื้อหาเพื่อแสดงผล
+-   ที่ฝั่งของserver เราขยาย reactive object ด้วยโมเดลการถดถอยแบบเชิงเส้น
 
 ```{r eval=F}
 mparams <- reactive({                                            # <1>
@@ -642,13 +639,13 @@ mparams <- reactive({                                            # <1>
 	bindEvent(input$refresh, ignoreNULL = FALSE)
 ```
 
-1.  We renamed the `dat()` reactive object to `mparams()` as it now holds multiple arguments instead of just one dataframe
-2.  Create a formula and produce the linear regression output
-3.  Return a list of arguments to be used for the outputs
+1.	เราเปลี่ยนชื่อ `dat()` เป็น `mparams()` เนื่องจากตอนนี้มันเก็บอาร์กิวเมนต์หลายตัว แทนที่จะเป็น dataframe เดียว
+2.	สร้างสูตรและสร้างผลลัพธ์จาก linear regression
+3.	ส่งคืนlistของอาร์กิวเมนต์เพื่อใช้สำหรับoutput
 
-## Creating the output
+## การสร้างผลลัพธ์ output
 
--   From this point, we can chuck the `mparams` reactive object into all the rendering functions
+-   ากขั้นตอนนี้เราสามารถนำ`mparams`ซึ่งเป็น reactive object เข้าไปในฟังก์ชันการแสดงผลทั้งหมด 
 
 ```{r eval=F}
 ### Pair diagram ----
@@ -712,14 +709,14 @@ output$tableregression <- renderUI({                        # <4>
 })                                                          # <4>
 ```
 
-1.  Again, we need to change the input to the `ggpairs()` function as the name and structure of the reactive object has changed.
-2.  Create a Plotly coefficient plot using the `parameters` package
-3.  Create a Plotly scatter plot for bi-variate regression. If more than one y variable is selected, an empty plot and a warning message is created.
-4.  Create a model table using the `modelsummary` package and prepare it for HTML rendering.
+1.	เราต้องเปลี่ยน input สำหรับ `ggpairs()` เนื่องจากชื่อและโครงสร้างของreactive objectมีการเปลี่ยนแปลง
+2.	สร้างแผนภูมิแสดงค่าสัมประสิทธิ์ของ Plotly โดยใช้แพ็คเกจ `parameters`
+3.	สร้างแผนภูมิกระจายของ Plotly สำหรับการถดถอยแบบสองตัวแปร หากเลือกตัวแปร y มากกว่าหนึ่งตัว จะสร้างแผนภูมิที่ว่างเปล่าและแสดงข้อความเตือน
+4.	สร้างตารางของโมเดลโดยใช้แพ็คเกจ `modelsummary` และเตรียมสำหรับการแสดงผลแบบ HTML
 
 ![](resources/05_04.gif)
 
-## Full code
+## code ตัวเต็ม
 
 ```{r eval=FALSE, file="shinyapps/guerry/states/05_visualization04.R"}
 #| code-fold: true
@@ -729,23 +726,23 @@ output$tableregression <- renderUI({                        # <4>
 # Exercises
 
 ::: callout-note
-## Exercise 1
+## แบบฝึกหัด 1
 
-Thinking back to our initial visualization structure (data selection, data exploration, data modelling, ???), what could be a good last step? What type of visualization can enhance our understanding of the relationship among the Guerry variables? Write down your ideas along with possible types of visualizations.
+เมื่อคิดกลับไปยังโครงสร้างการแสดงผลเริ่มต้นของเรา (การเลือกข้อมูล, การสำรวจข้อมูล, การสร้างโมเดลข้อมูล, และอื่นๆ) ขั้นตอนสุดท้ายที่ดีควรจะเป็นอย่างไร แบบของการแสดงผลใดที่ช่วยให้เข้าใจเกี่ยวกับความสัมพันธ์ของตัวแปร Guerry โปรดเขียนความคิดเห็นของคุณพร้อมกับประเภทของการแสดงผลที่เป็นไปได้
 :::
 
 ::: {.callout-tip collapse="true"}
-Visit the [R graph gallery](https://r-graph-gallery.com/) or the [R Plotly gallery](https://plotly.com/r/) to get inspired!
+ดู [R graph gallery](https://r-graph-gallery.com/) หรือ [R Plotly gallery](https://plotly.com/r/) 
 :::
 
 ::: callout-note
-## Exercise 2
+## แบบฝึกหัด 2
 
-Add a fourth quadrant in the dashboard layout. Also add a box that will hold the content.
+เพิ่มช่องที่สี่ในรูปแบบ dashboard และเพิ่มกล่องที่จะรองรับเนื้อหาด้วย.
 :::
 
 ::: {.callout-tip collapse="true"}
-Don't forget about the use of `fluidRow()` and `column()`! The new quadrant goes right below the pair plot in the second column:
+อย่าลืมเกี่ยวกับการใช้ fluidRow() และ column() ช่องใหม่นี้จะต้องอยู่ด้านล่างของแผนภูมิคู่ในคอลัมน์ที่สอง:
 
 ```{r eval=FALSE}
 fluidRow(
@@ -764,10 +761,9 @@ fluidRow(
 :::
 
 ::: {.callout-warning collapse="true"}
-## Solution
+## คำตอบ
 
-The fourth quadrant is the second row of the second column, i.e.:
-
+ช่องที่สี่คือแถวที่สองของคอลัมน์ที่สอง นั่นคือ:
 ```{r eval=FALSE}
 fluidRow(
 	column(
@@ -785,39 +781,42 @@ fluidRow(
 :::
 
 ::: callout-note
-## Exercise 3
+## แบบฝึกหัด 3
 
-Add a UI output and an empty rendering function
+เพิ่ม UI สำหรับแสดงผลและฟังก์ชันการแสดงผลที่ว่างเปล่า
 :::
 
 ::: {.callout-tip collapse="true"}
-The respective plotly functions are `plotly::plotlyOutput()` and `plotly::renderPlotly()`
+
+ฟังก์ชันของ Plotly ที่เกี่ยวข้องคือ`plotly::plotlyOutput()` and `plotly::renderPlotly()`
 :::
 
 ::: callout-note
-## Exercise 4
+## แบบฝึกหัด 4
 
-Implement the visualization from exercise 1 within the new box from exercise 2. Create your plot using ggplot2 and convert it to a plotly chart using `ggplotly()`
+นำเสนอการแสดงผลจากแบบฝึกหัดที่ 1 ภายในกล่องใหม่จากแบบฝึกหัดที่ 2 สร้างแผนภูมิของคุณโดยใช้ ggplot2 และแปลงมันเป็นแผนภูมิ plotly โดยใช้ `ggplotly()`
 :::
 
 ::: callout-note
-## Exercise 5
+## แบแฝึกหัด 5
 
-Remove all mode bar buttons except "Zoom in" and "Zoom out" from the new visualization of exercise 4
+ลบปุ่มทั้งหมดในแถบโหมดยกเว้น "Zoom in" และ "Zoom out" ออกจากการแสดงผลใหม่ในแบบฝึกหัดที่ 4
 :::
 
 ::: {.callout-tip collapse="true"}
-The relevant function is `plotly::config()`
-
-Call `schema()` and explore `object -> config` to find out about ways to remove mode bar buttons
+คำสั่งที่เกี่ยวข้อง `plotly::config()`
 
 A list of modebar buttons is provided on Plotly's [GitHub repository](https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js) or under `object -> layout -> layoutAttributes -> modebar -> remove`
+
+เรียกใช้ `schema()` และสำรวจใน `object -> config` เพื่อหาวิธีการลบปุ่มบนแถบโหมด
+
+รายการของปุ่ม modebar มีให้ดูที่ GitHub repository ของ Plotly หรือภายใต้ `object -> layout -> layoutAttributes -> modebar -> remove`
 :::
 
 ::: {.callout-warning collapse="true"}
 ## Solution
 
-To remove modebar buttons, we need to change the `plotly::config()` of the generated plot output:
+เพื่อลบปุ่มบนแถบโหมด, เราต้องเปลี่ยน `plotly::config()` ของผลลัพธ์การแสดงผลที่ได้จากการสร้างแผนภูมิ:
 
 ```{r eval=FALSE}
 ggplotly(p) %>%
@@ -829,21 +828,21 @@ ggplotly(p) %>%
 :::
 
 ::: callout-note
-## Exercise 6
+## แบบฝึกหัด 6
 
-Change the axis width of the new graph from exercise 4 to 5 pixels and color to #000
+เปลี่ยนความกว้างของแกนของแผนภูมิใหม่จากแบบฝึกหัดที่ 4 เป็น 5 พิกเซลและเปลี่ยนสีเป็น #000
 :::
 
 ::: {.callout-note collapse="true"}
-The relevant function is `plotly::layout()`
+ฟังก์ชันที่เกี่ยวข้องคือ `plotly::layout()`
 
-Call `schema()` and explore `object -> layout -> layoutAttributes` to find out about ways to change the axis layout
+เรียกใช้ `schema()` และสำรวจใน `object -> layout -> layoutAttributes` เพื่อหาวิธีการเปลี่ยนแปลงการวางแกน
 :::
 
 ::: {.callout-warning collapse="true"}
 ## Solution
 
-To change the axis width, we need to change the `plotly::layout()` of the plotly object. Determining which option controls the axis layout is a tricky question. To do that, we can explore the `plotly::schema()`. In this case, the relevant option is found unter `object -> layout -> layoutAttributes -> xaxis/yaxis -> linewidth/linecolor`. Then, just add a layout to the plot object and change the relevant options:
+เพื่อเปลี่ยนความกว้างของแกน เราต้องเปลี่ยน `plotly::layout()`  การกำหนดว่าตัวเลือกไหนควบคุมการวางแกนเป็นคำถามที่ยาก เพื่อทำเช่นนั้น, เราสามารถสำรวจ `plotly::schema()` ในกรณีนี้  ตัวเลือกที่เกี่ยวข้องจะพบได้ภายใต้ `object -> layout -> layoutAttributes -> xaxis/yaxis -> linewidth/linecolor` หลังจากนั้น, เพียงเพิ่ม layout ในวัตถุ plot และเปลี่ยนตัวเลือกที่เกี่ยวข้อง:
 
 ```{r eval=FALSE}
 ggplotly(p) %>%
@@ -855,11 +854,11 @@ ggplotly(p) %>%
 :::
 
 ::: callout-note
-## Exercise 7
+## แบบฝึกหัด 7
 
-Currently, we have three input widgets to change the appearance of plots: `model_x`, `model_y`, and `model_std`. Implement another input widget that allows users to manipulate the data, output or the plot appearance.
+ตอนนี้รามีตัวinputsสามตัวที่มีผลกับการเปลี่ยนแปลงการแสดงผล: `model_x`  `model_y` และ `model_std` การเพิ่มinputอีกตัวหนึ่งเพื่อให้ผู้ใช้สามารถจัดการข้อมูล ผลลัพธ์ หรือการแสดงผลของแผนภูมิได้
 :::
 
 ::: {.callout-tip collapse="true"}
-Should the new input widget change all plots or just a selection of plots? Should the new widgets control the way data is cleaned (e.g. normalising), analysed (e.g. different modelling approaches) or displayed (e.g. plot theming)?
+inputs ใหม่ควรจะเปลี่ยนแปลงแผนภูมิทั้งหมดหรือเพียงบางส่วนของแผนภูมิ ตัวinputใหม่ควรจะควบคุมวิธีที่ข้อมูลถูกclean (เช่น การทำnormalise) หรือวิเคราะห์ (เช่น วิธีการสร้างแบบจำลองที่แตกต่างกัน) หรือการแสดงผล (เช่น ธีมการแสดงผลแผนภูมิ) หรือไม่
 :::
