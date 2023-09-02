@@ -1,12 +1,12 @@
 --- 
-title: "User Interface (UI): Designing the front end"
+title: "User Interface (UI): การออกแบบ front end"
 ---
 
-- Learning outcomes: 
-  - Understand logic underlying user interfaces in Shiny
-  - Learn how to create UIs using different layouts, inputs and outputs
-  - Become familiar with UI functions such as `fluidPage()`, `dashboardPage()`, `menuItem()`, `tabItems()`, `tabsetPanel()` and `tabPanel()`
-  - Understand UI of Guerry app
+- จุดประสงค์: 
+  - เข้าใจตรรกะการทำงานของ user interfaces ใน Shiny
+  - เรียนรู้ที่จะสร้าง UIs โดยใช้ layouts, inputs และ outputs ต่าง ๆ
+  - คุ้นเคยกับ UI functions อย่างเช่น `fluidPage()`, `dashboardPage()`, `menuItem()`, `tabItems()`, `tabsetPanel()` และ `tabPanel()`
+  - เข้าใจ UI ของ Guerry app
 
 Sources: @wickham2021mastering [Ch. 2]
 
@@ -22,35 +22,35 @@ pacman::p_load(knitr, quarto)
 
 
 
-## Basics
-- Shiny encourages separation of code that generates UI (*front end*) from code that drives app's behaviour (*server/back end*).
-- Here focus on front end & tour of Shiny inputs and outputs
-  - won't stitch inputs and outputs together yet
-- primary focus on native Shiny components (contained in `Shiny` package) but vibrant community (see [awesome shiny extenstions](https://github.com/nanxstats/awesome-shiny-extensions))
+## พื้นฐาน
+- พยามยามแยกส่วน Shiny code ที่สร้าง UI (*front end*) กับส่วนการทำงานหลังบ้าน (*server/back end*).
+- ตอนนี้เราโฟกัสไปที่ตัวหน้าตาหรือ front end และก็ดูพวก inputs และ outputs
+  - อย่าเพิ่งรวมตัวหรือต่อ inputs กับ outputs เข้าด้วยกัน
+- ให้โฟกัสกับตัวองค์ประกอบหรือ components พื้นฐาน (ที่มากับตัว Shiny package) ส่วน components อิ่นๆ สามารถดูได้ที่  [awesome shiny extenstions](https://github.com/nanxstats/awesome-shiny-extensions)
 
 
 
 ## UI: Layout
-- Any Shiny app consists of `ui`, `server` and `shinyApp(ui=ui, server = server)`
-  - `ui <- function()`: function is used to create UI
-    - UI then displays different inputs and outputs
+- Shiny app โดยทั่วไปจะประกอบด้วย `ui`, `server` และ `shinyApp(ui=ui, server = server)`
+  - `ui <- function()`: เป็น function ที่ใช้สำหรับสร้าง UI
+    - UI แสดง inputs และ outputs ต่างๆ
   - Shiny provides different functions that can be used to create basic layouts
-- `fluidPage()` creates the classic fluid page layout
-- `dashboardPage()` create a dashboard layout (Guerry dashboard uses that!)
+- `fluidPage()` ใช้สำหรับสร้าง classic fluid layout
+- `dashboardPage()` สำหรับสร้าง dashboard layout (ซึ่ง Guerry dashboard ก็ใช้ function นึ้)
 
 ### fluidPage
-- `fluidPage()`: Creates most basic layout
-  - display that automatically adjusts to user's browser dimensions (smartphone!)
-  - layout consists of rows containing columns
-    - rows making sure elements appear on the same line
-    - columns define how much horizontal space elements should occupy (within a **12-unit wide grid**)
-- Below a UI with title panel and sidebar panel
-    + `titlePanel()` and `sidebarLayout()` create a basic Shiny app/layout with a sidebar
-    + `sidebarLayout()` takes two functions
-        + `sidebarPanel()`: Includes content displayed in the sidebar
-        + `mainPanel()`: Includes content displayed in the main panel
-- - `fluidRow()` and `column()`: Divide ui into rows/columns
-* **Try the code below** by pasting it into your console and running it. It will only create a user interface.
+- `fluidPage()`: เป็น layout พื้นฐาน
+  - สามารถที่จะแสดงผลโดยปรับเปลี่ยนขนาดอัตโนมัติตามขนาดของ web browser (อย่างเช่น smartphone)
+  - layout ประกอบด้วยแถวที่แบ่งเป็น columns
+    - rows เป็นตัวที่ทำให้ตัวองค์ประกอบต่างๆมันแสดงผลในบรรทัดเดียวกัน
+    - columns เป็นตัวกำหนดว่าในแนวขวางเจ้าองค์ประกอบนั้นๆมันจะกว้างเท่าไหร่ (ภายในตารางกว้าง **12 หน่วย**)
+- ด้านล่างเป็น UI กับ title panel และ sidebar panel
+    + `titlePanel()` และ `sidebarLayout()` สำหรับสร้าง Shiny app/layout พื้นฐานที่มี sidebar
+    + `sidebarLayout()` จะมี 2 functions
+        + `sidebarPanel()`: เพื่อแสดงเนื้อหาใน sidebar
+        + `mainPanel()`: เพื่อแสดงเนื้อหา main panel
+- - `fluidRow()` และ `column()`: เพือแบ่ง ui เป็น rows/columns
+* **ทดลอง code ด้านล่างนี้** 
 
 ```{r 03-user-interface-2, cache=TRUE, eval=FALSE, include=TRUE}
 #| code-fold: true
@@ -77,9 +77,9 @@ server <- function(input, output){}
 shinyApp(ui=ui, server = server)
 ```
 
-- Change `sidebarLayout(position = "right",...)` to position sidebar on the right
-- `navbarPage()`: Create a [multi-page user-interface](http://shiny.rstudio.com/gallery/navbar-example.html) that includes a navigation bar
-- Sometimes adding borders helps..
+- เปลี่ยน `sidebarLayout(position = "right",...)` เพื่อขยับ sidebar อยู่ด้านขวา
+- `navbarPage()`: สำหรับสร้าง UI [multi-page user-interface](http://shiny.rstudio.com/gallery/navbar-example.html) ที่มี navigation bar
+- บางคริั้งใส่ขอบก็ช่วย..
 
 ```{r 03-user-interface-2-3, cache=TRUE, eval=FALSE, include=TRUE}
 #| code-fold: true
@@ -111,11 +111,11 @@ shinyApp(ui=ui, server = server)
 
 ```
 
-#### Creating panels and tabs
+#### การสร้าง panels และ tabs
 
 * `tabsetPanel()` + `tabPanel()`
-    + Allows for using sidebar layout but dividing main panel into tabs
-    + Users can switch between tabs that can be used to display various outputs simultanously
+    + สำหรับ sidebar layout แต่แบ่ง main panel เป็น tabs
+    + ผู้ใช้สามารถที่จะสลับไปมาระหว่าง tabs ได้ 
 
 ```{r 03-user-interface-3, cache=TRUE, eval=FALSE, include=TRUE}
 ui <- fluidPage(
@@ -143,18 +143,13 @@ ui <- fluidPage(
 
 
 
-
-
-
-
-
 ### dashboardPage  {#sec-dashboardPage}
-- `dashboardPage()`: creates a dashboard interface (underlying Guerry app!)
-  - function contained in packages `shinydashboard` and `bs4Dash` (use `bs4Dash`^[Bootstrap 4 shinydashboard using AdminLTE3: [Website](https://rinterface.github.io/bs4Dash/)]!)
-  - `dashboardHeader()`: creates a dashboard header
-  - `dashboardSidebar()`: Creates dashboard sidebar
-    - sidebar typically contains a sidebarMenu, although it may also contain a sidebarSearchForm, or other Shiny inputs.
-  - `dashboardBody()`: creates main body typically containing boxes or tabItems
+- `dashboardPage()`: สำหรับสร้าง dashboard interface 
+  - function นี้จะมีอยู่ใน packages `shinydashboard` และ `bs4Dash` (ใช้ `bs4Dash`^[Bootstrap 4 shinydashboard using AdminLTE3: [Website](https://rinterface.github.io/bs4Dash/)]!)
+  - `dashboardHeader()`: สร้างส่วนหัว (header) ของ dashboard 
+  - `dashboardSidebar()`: สร้าง dashboard sidebar
+    - sidebar โดยปกติจะประกอบด้วย sidebarMenu, หรืออาจเป็น sidebarSearchForm, หรือ Shiny inputs อื่นๆ
+  - `dashboardBody()`: สำหรับสร้าง main body ที่อาจประกอบด้วย boxes หรือ tabItems
 
 ```{r 03-user-interface-4, cache=TRUE, eval=FALSE, include=TRUE}
 library(bs4Dash)
@@ -177,13 +172,13 @@ server <- function(input, output, session) {}
 shinyApp(ui, server)
 ```
 
-#### Creating items and tabs {#sec-dashboardPage2}
-- `?sidebarMenu()`: create sidebarMenu within dashboardSidebar
-  - `menuItem(tabName = "...", text = "...", icon = icon("table"))`: Creates one item in sidebarMenu
-- `tabItems()`: creates container for tab items
-  - `tabItem(tabName = "insp", ...)`: creates tab to put inside a tab items container
-  - can be combined with `fluidRow()` and `column()`
-  - Connection through name `tabName` argument 
+#### ใส่พวก items และ tabs {#sec-dashboardPage2}
+- `?sidebarMenu()`: สร้าง sidebarMenu ภายใน dashboardSidebar
+  - `menuItem(tabName = "...", text = "...", icon = icon("table"))`: ใส่หนึ่ง item ใน sidebarMenu
+- `tabItems()`: สร้างตัว container สำหรับ tab items
+  - `tabItem(tabName = "insp", ...)`: สร้าง tab ใส่ใน tab items container
+  - สามารถใช้ร่วมกับ  `fluidRow()` และ `column()`
+  - เชื่อมต่อกับผ่านชื่อ `tabName`  
 
 ```{r 03-user-interface-5, cache=TRUE, eval=FALSE, include=TRUE}
 library(bs4Dash)
@@ -226,15 +221,13 @@ shinyApp(ui, server)
 
 
 
-
-
-### Images {#sec-dashboardPage3}
-* `img()` function places an image
-  - `img(src = "http://.../img-2.jpg", height = 35, width = 35)`: Load image from website or folder
-* Store image(s) locally
-    + `www` subfolder stores all sorts of additional files(images, data etc.)
-    + If working directory  = app directory create with: `dir.create("www")`
-    + **IMAGES PLACED UNDER `www` SHOULD BE REFERENCES WITHOUT THE `www` FOLDER NAME**
+### รูปภาพ {#sec-dashboardPage3}
+* `img()` function สำหรับใส่ image
+  - `img(src = "http://.../img-2.jpg", height = 35, width = 35)`: Load image จาก website หรือ folder
+* เก็บ image(s) ไว้ที่เครื่อง
+    + `www` subfolder สำหรับเก็บข้อมูล(images, data etc.) ไว้ใช้กับapp
+    + ถ้า working directory  = app directory กก็สามารถสร้างได้ด้วยคำสั่ง: `dir.create("www")`
+    + **ภาพที่เก็บไว้ที่ `www` สามรถเรียกใช้ได้เลยโดยไม่ต้องพิมพ์ชื่อ`www`นำหน้าชื่อไฟล์**
       + e.g., `img(src = "guerry.jpg", width = "100%")`
 
 ```{r 03-user-interface-6, cache=TRUE, eval=FALSE, include=TRUE}
@@ -248,11 +241,11 @@ ui <- dashboardPage( # <1>
     span(style = "display: inline-block; width: 100%;"), # <3>
     a( # <4>
       class = "logo",
-      href = "https://gesis.org/",
-      img(src = "gesis-logo.png", style = "height: 1.8em;")
+      href = "https://ammnet.org/",
+      img(src = "ammnet.png", style = "height: 1.8em;")
     ),
     title = tagList( # <5>
-      img(src = "workshop-logo.png", width = 35, height = 35),
+      img(src = "ammnet.png", width = 35, height = 35),
       span("The Guerry Dashboard", class = "brand-text")
     )
   ),
@@ -281,22 +274,22 @@ server <- function(input, output, session) {} # <11>
 
 shinyApp(ui, server) # <12>
 ```
-1. `dashboardPage()`: Main function to create a dashboard page layout in Shiny.
-2. `dashboardHeader()`: Function to set up the header part of the dashboard.
-3. `span()`: Function to create an HTML span element with a style attribute to control its display.
-4. `a()`: Function to create a hyperlink element ("a" HTML tag) with a specified class, href attribute (URL), and nested img (image) element.
-5. `tagList()`: Function to create an HTML list from arguments. Here it's used to group the title components together.
-6. `dashboardSidebar()`: Function to create the sidebar of the dashboard.
-7. `menuItem()`: Function to add an item to the sidebar menu.
-8. `dashboardBody()`: Function to create the body of the dashboard.
-9. `tabItems()`: Function to create tabbed content sections. The arguments are pairs of tab names and tab content.
-10. `tabItem()`: Function to create a single tab item. Its arguments are a tab name and its content.
-11. `server`: Placeholder for server logic. In this case, it's empty.
-12. `shinyApp(ui, server)`: Main function to create a Shiny app. It takes as arguments the UI and server definitions.
+1. `dashboardPage()`: function หลักสำหรับสร้าง dashboard page layout ใน Shiny.
+2. `dashboardHeader()`: Function สำหรับ header ของ dashboard.
+3. `span()`: Function เพื่อทำ HTML span กับตัว element โดยใช้ style attribute ที่ควบคุมการแสดงผลของตัว element นั้นๆ
+4. `a()`: Function สำหรับทำ hyperlink element ("a" HTML tag) กับ specified class, href attribute (URL), และ nested img (image) element
+5. `tagList()`: Function สำหรับทำ HTML list  ในที่นี้มันถูกใช้เพื่อรวม title เข้าด้วยกัน
+6. `dashboardSidebar()`: Function สำหรับสร้าง sidebar ของ dashboard.
+7. `menuItem()`: Function เพื่อเพิ่ม item เข้าไปใน sidebar menu
+8. `dashboardBody()`: Function เพื่อสร้างตัว body ของ dashboard.
+9. `tabItems()`: Function สร้างส่วน tabbed content  ตัว arguments คือคู่ของ tab names กับตัวเนื้อหา
+10. `tabItem()`: Function สำหรับสร้าง tab item ตัว arguments คือคู่ของ tab names กับตัวเนื้อหา
+11. `server`: สำหรับใส่การทำงานส่วนของ server  ในกรณีนี้ว่างไว้ก่อน
+12. `shinyApp(ui, server)`: function หลักสำหรับสร้าง Shiny app ซึ่งมันต้องการส่วน UI กับส่วน server ตามที่ได้เขียนcodeไว้
 
 
-#### Add several images
-* Below some exemplary code to add several images, i.e., simply repeat the img() function
+#### ใส่ images
+* ตัวอย่างสำหรับใส่ภาพ
 
 ```{r 03-user-interface-6-2, cache=TRUE, eval=FALSE, include=TRUE}
 #| code-fold: true
@@ -309,11 +302,11 @@ ui <- dashboardPage(
     span(style = "display: inline-block; width: 100%;"),
     a( # <4>
       class = "logo",
-      href = "https://gesis.org/",
-      img(src = "gesis-logo.png", style = "height: 1.8em;")
+      href = "https://ammnet.org/",
+      img(src = "ammnet.png", style = "height: 1.8em;")
     ),
     title = tagList( # <5>
-      img(src = "workshop-logo.png", width = 35, height = 35),
+      img(src = "ammnet.png", width = 35, height = 35),
       span("The Guerry Dashboard", class = "brand-text")
     )
   ),
@@ -347,16 +340,16 @@ shinyApp(ui, server)
 
 
 ### Exercise: UI layout 
-1. Familiarize yourself and use the code in @sec-dashboardPage3.
-2. Change the website title to "A big name in politics"
-3. Change the sidebar menu title with "The Arni dashboard".
-4. Replace the image of Guerry with an image Arnold Schwarzenegger from the web, e.g., [here](http://assets.schwarzenegger.com/images/img-2.jpg).
-  - Either store the image in a `www` subfolder of your app directory or use the URL in your code.
+1. พยายามทำความเข้าใจ code @sec-dashboardPage3.
+2. เปลี่ยน website title เป็น "A big name in politics" หรืออะไรก็ได้ตามต้องการ
+3. เปลี่ยน sidebar menu title เป็น "The Arni dashboard" หรืออะไรก็ได้ตามต้องการ
+4. เปลี่ยนภาพของ Guerry เป็นภาพอื่น เช่นภาพของ Arnold Schwarzenegger จาก web เช่น [here](http://assets.schwarzenegger.com/images/img-2.jpg).
+  - หรือจะทดลองเรียกภาพที่เก็บไว้ใน `www` มาใช้ดู
 
 
 ::: {.callout-warning collapse="true"}
 
-#### Solution: Using image from link
+#### Solution: ใช้ภาพจาก link
 
 ```{r 03-user-interface-7-5, echo=TRUE, eval=FALSE, include=TRUE}
 # UI ----
@@ -368,11 +361,11 @@ ui <- dashboardPage(
     span(style = "display: inline-block; width: 100%;"),
     a(
       class = "logo",
-      href = "https://gesis.org/",
-      img(src = "gesis-logo.png", style = "height: 1.8em;")
+      href = "https://ammnet.org/",
+      img(src = "ammnet.png", style = "height: 1.8em;")
     ),
     title = tagList(
-      img(src = "workshop-logo.png", width = 35, height = 35),
+      img(src = "ammnet.png", width = 35, height = 35),
       span("The Arni Dashboard", class = "brand-text")
     )
   ),
@@ -404,23 +397,19 @@ shinyApp(ui, server)
 
 ```
 
-
-
-
 :::
-
 
 ::: {.callout-warning collapse="true"}
 
-#### Solution: Using image from www folder
+#### Solution: ใช้ภาพจาก www folder
 
-1. Check the directory you are in with `getwd()`.
-2. Make sure the `app.R` file you are using is saved in this directory.
-3. Use `dir.create("www")` or the buttons in Rstudio to create the `www` folder.
-4. Store the image from the [link](http://assets.schwarzenegger.com/images/img-2.jpg) in this `www` folder.
-5. Add the image name simply in the code `img(src = "img-2.jpg", width = 729, height = 423)` (see below).
-  - **IMAGES PLACED UNDER `www` SHOULD BE REFERENCES WITHOUT THE `www` FOLDER NAME**
-6. Run the app.
+1. ตรวจดูว่าเราอยู่ในdirectoryอะไร `getwd()`.
+2. เช็คดูอีกครั้งว่าไฟล์ `app.R` อยู่ใน directory เดียวกันนี้
+3. ใช้คำสั่ง `dir.create("www")` หรือปุ่มใน RStudio เพื่อสร้าง `www` folder
+4. เก็บภาพจาก [link](http://assets.schwarzenegger.com/images/img-2.jpg) ไว้ใน `www` folder นี้
+5. หลังจากนั้นก็เพิ่มภาพโดยใช้คำสั่ง `img(src = "img-2.jpg", width = 729, height = 423)` 
+  - **ภาพที่เก็บใน www สามารถเรียกใช้ได้เลยโดยไม่ต้องพิมพ์path**
+6. รัน app
 
 ```{r 03-user-interface-7, echo=TRUE, eval=FALSE, include=TRUE}
 # UI ----
@@ -432,8 +421,8 @@ ui <- dashboardPage(
     span(style = "display: inline-block; width: 100%;"),
     a(
       class = "logo",
-      href = "https://gesis.org/",
-      img(src = "gesis-logo.png", style = "height: 1.8em;")
+      href = "https://ammnet.org/",
+      img(src = "ammnet.png", style = "height: 1.8em;")
     ),
     title = tagList(
       img(src = "workshop-logo.png", width = 35, height = 35),
@@ -468,45 +457,40 @@ shinyApp(ui, server)
 
 ```
 
-
-
-
 :::
-
-
 
 
 
 ## UI: Inputs
 
-### UI Inputs: common structure
+### UI Inputs: โครงสร้างทั่วไป
 - `inputId` argument:
-  - `inputId` connects front end with back end, e.g., if UI has input with ID `name`, the server function will access it with `input$name`
-  - name` = **simple string** (only letters, numbers, and underscores) and **unique**
-  - Inputs are stored in list called `input$...`
-- `label` argument: Used to create human-readable label
-- `value` argument: usually let's you set default value
-- Remaining 4-x arguments are unique to the particular input
-- Recommendation: Supply `inputId` and `label` arguments by position, and all other arguments by name
-  - Q: How would we read the following? 
+  - `inputId` ทำหน้าที่เป็นตัวเชื่อม front end กับ back end โดยที่ถ้า UI มี input ที่มีชื่อ ID `name` ฝั่งของ server function สามารถเข้าถึงค่าผ่าน `input$name`
+  - name` = **ตัวอักษรง่ายๆ** (ตัวหนังสือ, เลข และ underscores) และ **จำเพาะ ไม่ซ้ำ**
+  - Inputs จะถูกเก็บใน list ซึ่งเรียกผ่าน `input$...`
+- `label` argument: สำหรับ label ที่อ่านเข้าใจง่าย
+- `value` argument: ค่า default value
+- ส่วนที่เหลือ อีก 4 ตัว ก็เป็นค่าเฉพาะอื่นๆสำหรับตัวแปรนั้นๆ
+- แนะนำ: ให้ใช้ตำแหน่งกับ `inputId` และ `label` และส่วนอื่นๆใช้ชื่อ
+  - Q: เราอ่านคำสั่งนี้ว่าอย่างไร 
     - `sliderInput("min", "Limit (minimum)", value = 50, min = 0, max = 100)`
 
 
 
 ### UI Inputs: Logic
-- Widget = Web element the user can interact with ([Shiny widget gallery](https://shiny.posit.co/r/gallery/))
-    - Users can send messages to the SERVER/Computer (e.g. "I want to choose this variable") 
-* Underlying logic is the same for all widgets
-    - User uses widget to give input
-    - Input is inserted into the functions in the SERVER
+- Widget = Web element ที่ผู้ใช้สามารถมีปฏิสัมพันธ์ด้วยได้ ([Shiny widget gallery](https://shiny.posit.co/r/gallery/))
+    - ผู้ใช้สามารถส่งข้อความไปยัง serverได้  (เช่น "ผมต้องการเลือกตัวแปรนี้") 
+* เบื้องหลังมันจะเหมือนกันหมดสำหรับ logic ของ widgets
+    - ผู้ใช้ใช้ widget เพื่อให้ค่า inputs
+    - Input ก็จะถูกแทรกเข้าไปใน functions ในส่วน SERVER
       - `server <- function(input, output) {}`
-* `shiny` package contains many widgets
-  - Additional ones for instance in `shinyWidgets` package (e.g., `pickerInput()`)
+* ใน `shiny` จะมีหลาย widgets
+  - จะมีเพิ่มเติมอีกใน `shinyWidgets` package (เช่น `pickerInput()`)
     
 
 
-### UI Inputs: Examples
-- You can run the code for the Shiny app below in R.
+### UI Inputs: ตัวอย่าง
+- ลองรัน code ด้านล่างนี้ใน R
 
 ```{r 03-user-interface-9, cache=TRUE, eval=FALSE, include=TRUE}
 library(shinyWidgets) # Install!
@@ -559,12 +543,12 @@ shinyApp(ui, server)
 
 
 ### Exercise(s)
-* See [Exercises 2.2.8](https://mastering-shiny.org/basic-ui.html#exercises-2).
+* ดู [Exercises 2.2.8](https://mastering-shiny.org/basic-ui.html#exercises-2).
 
 
 
-1.  When space is at a premium, it's useful to label text boxes using a placeholder that appears *inside* the text entry area.
-    How do you call `textInput()` to generate the UI in @fig-textInput below (see `?textInput`)?
+1.  เราจะใส่ข้อความหรือที่เรียกว่า placeholder ให้ปรากฏ *ภายใน* ช่องใส่ข้อความได้อย่างไร
+    ด้วยคำสั่ง `textInput()`  @fig-textInput ตามด้านล่างนี้ (ดู `?textInput`)?
 
 
 ![Text input (Source: Wickham 2021)](resources/placeholder.png){#fig-textInput width=100%}
@@ -580,7 +564,7 @@ textInput("text", "", placeholder = "Your name")
 
 ::: 
 
-2.  Carefully read the documentation for `sliderInput()` to figure out how to create a date slider, as shown below in @fig-date-slider.
+2. อ่านเอกสารของคำสั่ง `sliderInput()` เพื่อดูว่าเราจะสร้าง date slider อย่างตัวอย่างนี้ได้อย่างไร @fig-date-slider.
 
 
 ![Date slider (Source: Wickham 2021)](resources/date-slider.png){#fig-date-slider width=100%}
@@ -603,9 +587,8 @@ sliderInput(
 
 ::: 
 
-3.  Create a slider input to select values between 0 and 100 where the interval between each select able value on the slider is 5.
-    Then, add animation to the input widget so when the user presses play the input widget scrolls through the range automatically.
-    
+3.  สร้าง slider สำหรับเลือกค่าระหว่าง 0 ถึง 100 โดยมี stepของค่าที่เลือกได้คือ 5 พร้อมกับเพิ่มปุ่ม play เพื่อให้ผู้ใช้สามารถเปลี่ยนค่าได้เองอัตโนมัติ
+
 ::: {.callout-warning collapse="true"}
 
 #### Solution
@@ -620,8 +603,8 @@ sliderInput(
 
     
 
-4.  If you have a moderately long list in a `selectInput()`, it's useful to create sub-headings that break the list up into pieces.
-Read the documentation to figure out how. (Hint: the underlying HTML is called `<optgroup>`.)
+4.  ถ้าเรามีลิสต์ที่จะใช้กับ `selectInput()` ที่ค่อนข้างยาว เราควรที่จะแบ่งเป็นกลุ่มย่อย ๆ ลองอ่านเอกสารของ `selectInput()` นี่ดูว่าเราจะทำแบบนั้นได้อย่างไร 
+(Hint: ลองดูในส่วน HTML ที่เรียกว่า `<optgroup>`.)
 
 
 ::: {.callout-warning collapse="true"}
@@ -647,7 +630,7 @@ selectInput(
 
 ::: {.callout-warning collapse="true"}
 
-#### Solution: One app with all the widgets
+#### Solution: ตัวอย่าง app ที่ใช้ widgets หรือชนิดตัวควบคุมแบบอื่นๆ
 
 ```{r 03-user-interface-11-4-4-2, eval=FALSE, echo = TRUE}
 ui <- fluidPage(
@@ -689,8 +672,8 @@ shinyApp(ui, server)
 
 ::: {.callout-warning collapse="true"}
 
-#### Solution: App that displays the input values
-- Solution taken from [stackoverflow](https://stackoverflow.com/a/41035132).
+#### Solution: App ที่แสดงค่า inputs ด้วย
+- ลอกและเรียบเรียงมาจาก [stackoverflow](https://stackoverflow.com/a/41035132).
 
 ```{r 03-user-interface-11-4-4-2-1, eval=FALSE, echo = TRUE}
 #rm(list=ls())
@@ -744,14 +727,14 @@ shinyApp(ui = ui, server = server)
 
 
 ## UI: Outputs
-- Outputs in UI create placeholders that are later filled by the server function
-- Have unique ID as first argument like inputs
-  - e.g., `textOutput("text")` as ID `text` that is filled by the server
-- If UI specification creates an output with ID `text`, you'll access it in the server function with `output$text` (see below)
-- Each output function on the front end is coupled with a **render function** in the back end (server)
-- Three main types of output: text, tables, and plots
+- Outputs ใน UI คอส่วนที่สร้างพื้นที่ที่จะแสดงผลจาก server function
+- ซึ่งมันจะมีชื่อ ID เฉพาะของใครของมันเหมือน inputs
+  - เช่น `textOutput("text")` ชื่อ ID คือ`text` ที่จะถูกเติมค่าจาก server
+- ถ้า UI ที่สร้างใช้ชื่อ output ID คือ`text` เราสามารถที่จะเข้าถึงค่าของมันภายใน server function ได้ด้วยการเรียกผ่าน `output$text` (ดูด้านล่าง)
+- แต่ล่ะ output function ในหน้าfront end มันจะผูกติดกับ **render function** ที่ back end (server)
+- output มี 3 ประเภทหลัก: text ข้อความ, tables ตาราง และ plots กราฟต่างๆ
 
-### Text output
+### output แบบข้อความหรือText
 
 ```{r 03-user-interface-12, cache=TRUE, eval=FALSE, include=TRUE}
 ui <- fluidPage(
@@ -770,9 +753,7 @@ shinyApp(ui, server)
 ```
 
 
-
-
-### Table output
+### output แบบตาราง
 
 ```{r 03-user-interface-14, cache=TRUE, eval=FALSE, include=TRUE}
 ui <- fluidPage(
@@ -787,7 +768,7 @@ shinyApp(ui, server)
 ```
 
 
-### Plots output
+### output แบบกราฟต่างๆ
 
 ```{r 03-user-interface-15, cache=TRUE, eval=FALSE, include=TRUE}
 ui <- fluidPage(
@@ -802,12 +783,11 @@ shinyApp(ui, server)
 
 
 
-
 ### Exercise(s)
-* Taken from [Exercises 2.3.5](https://mastering-shiny.org/basic-ui.html#exercises-2).
+* เอามาจาก [Exercises 2.3.5](https://mastering-shiny.org/basic-ui.html#exercises-2).
 
 
-1.  Which of `textOutput()` and `verbatimTextOutput()` should each of the following render functions be paired with?
+1.  outputs จากคำสั่ง `textOutput()` กับ `verbatimTextOutput()` ควรจะคู่กับ render อะไร
 
 a.  `renderPrint(summary(mtcars))`
 b.  `renderText("Good morning!")`
@@ -841,10 +821,8 @@ shinyApp(ui, server)
 
 
 
-
-
-2.  Update the options in the call to `renderDataTable()` below so that the data is displayed, but all other controls are suppress (i.e. remove the search, ordering, and filtering commands).
-    You'll need to read `?renderDataTable` and review the options at <https://datatables.net/reference/option/> or at <https://shiny.posit.co/r/gallery/widgets/datatables-options/>
+2.  ปรับเปลี่ยน options ใน `renderDataTable()` เพื่อแสดงข้อมูลอย่างเดียว โดยที่ให้ตัว controls อื่นๆอย่าง การเรียงลำดับ การค้นหา หรือการกรองข้อมูลไม่ทำงาน 
+    หาข้อมูลได้ที่ `?renderDataTable` หรือ <https://datatables.net/reference/option/> หรือ <https://shiny.posit.co/r/gallery/widgets/datatables-options/>
 
 ```{r 03-user-interface-16, eval=FALSE}
 ui <- fluidPage(
@@ -881,47 +859,35 @@ shinyApp(ui, server)
 
 
 
-
-### Overview of Output functions
+### ภาพรวมของ Output functions
 
 * Output functions
-    + `htmlOutput()`... creates raw HTML (!)
-    + `imageOutput()`... creates image
-    + `plotOutput()`... creates plot
-    + `plotlyOutput` ... creates plotly graph (!)
-    + `tableOutput()`... creates table
-    + `textOutput()`... creates text
-    + `uiOutput()`... creates raw HTML (!)
-    + `verbatimTextOutput()`... creates text
-    + `dataTableOutput()`... creates a data table (interactiv) (!)
-    + `leafletOutput()` ... creates leaflet map
+    + `htmlOutput()`... ใช้เพื่อแสดงผลจาก HTML (!)
+    + `imageOutput()`... แสดง image
+    + `plotOutput()`... สร้าง plot
+    + `plotlyOutput` ... สร้าง plotly graph (!)
+    + `tableOutput()`... สร้าง table
+    + `textOutput()`... สร้าง text
+    + `uiOutput()`... แสดงผลจาก HTML (!)
+    + `verbatimTextOutput()`... สร้าง text
+    + `dataTableOutput()`... สร้างตาราง data table (!)
+    + `leafletOutput()` ... สร้างแผนที่ leaflet 
 
-- Our Guerry app uses those marked with  (!).
-
-
-
-
-
-
-
-
-
-
-
+- ใน Guerry app ก็ใช้ outputs ที่มีเครื่องหมาย  (!).
 
 
 
 ## HTML tag functions
-* Shiny's **HTML tag functions** translate input into html code
-  - Try pasting `h2("A NEW HOPE", align = "center")` into your console
-  - `h2()` function creates `<h2></h2>` html tag
-- Common HTML tags (e.g., `⁠<div`>⁠) can be created by calling for their tag name directly (e.g., `div()`)
-- Less common tags (e.g., `⁠<article`>⁠), use the tags list collection (e.g., `tags$article()`) stored in the `tags` object
-  - Try `tags$` in the console
-    - `.noWS = ...` argument to remove whitespace
-- See [full reference for HTML tags](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)  
-- Here we just do a quick example but in [this tutorial you find more information](https://shiny.rstudio.com/tutorial/written-tutorial/lesson3/)
-- **Exercise**: Please run the shiny app below and explore the effect of different html tags.
+* **HTML tag functions** ทำหน้าที่แปลง input เป็น html
+  - ทดลองพิมพ์ `h2("A NEW HOPE", align = "center")` ใน console
+  - `h2()` function จะสร้างhtml `<h2></h2>` 
+- ตัวHTML tags ทั่วไป (เช่น `⁠<div`>⁠) สามารถเรียกใช้จากชื่อได้เลยเช่น `div()`
+- ตัวtagsที่ไม่ค่อยถูกใช้บ่อย ๆ อย่าง `⁠<article`>⁠ อาจจะะต้องเรียกผ่าน list collection ที่ชื่อ `tags` เช่น`tags$article()`
+  - ลองพิมพ์ `tags$` ใน console
+    - `.noWS = ...` argument สำหรับลบ whitespace
+- ดู [full reference for HTML tags](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)  
+-  [ดู tutorial นี้อีกนะครับ](https://shiny.rstudio.com/tutorial/written-tutorial/lesson3/)
+- **Exercise**: รันตัวอย่างappด้านล่างนี้แล้วสังเกตผลลัพธ์ที่ได้จาการใช้ tagsต่างๆ
 
 
 ```{r 03-user-interface-17, cache=TRUE, eval=FALSE, include=TRUE}
@@ -965,36 +931,13 @@ shinyApp(ui, server)
 
 
 
+## Guerry app: แนะนำ tab 
+* ด้านล่างเป็นตัวอย่าง code จาก Guerry app ที่เกี่ยวกับการใช้ tab
+  - อาจจะต้องลบบางส่วนออกเพื่อให้มันรันได้
+    - เช่น `includeCSS("www/styles.css")`
+  - รูปที่ไม่ขึ้นแสดงว่ามันหาไม่เจอ
+  - หลายส่วนใน UI function ใช้ html tags เช่น `h1()` หรือ `jumbotron()`
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Guerry app: Introduction tab
-* Below is the code for the Guerry app introduction tab
-  - The code has some file dependencies that need to be deleted to run it directly
-    - e.g., `includeCSS("www/styles.css")`
-  - Images that are not accessible are simply shown as blank
-  - Most UI function simply create html tags, e.g., try `h1()` or `jumbotron()`
-  - Let's do this together!
 
 
 ```{r eval=FALSE, file="shinyapps/guerry/states_paul/app_tab_introduction.R"}
@@ -1005,22 +948,17 @@ shinyApp(ui, server)
 
 
 
-
-## Summary
-- UI Layout: `fluidPage()` and `dashBoardPage()` most common (we use the latter!)
-- Image can be included using `img(src = "...", , width = ..., height = ...)` function
+## สรุป
+- UI Layout: `fluidPage()` และ `dashBoardPage()` จะถูกใช้บ่อย 
+- เราใส่รูป Image ด้วยคำสั่ง `img(src = "...", , width = ..., height = ...)` 
 - `*Input()` functions: Used to generate input UI widgets
-  - input values are stored  in list `input$...` with particular `name`, e.g., `input$tab_tabulate_select`
+  - ค่าของ input ต่างจะถูกเก็บเป็นlistไว้ที่ `input$...` ซึ่งตามด้วยชื่อ `name` เช่น `input$tab_tabulate_select`
 - `*Output()` functions: Used to display output, `dataTableOutput()`
-  - output is sent from server
-- Both input/output functions have IDs the connect them to the server
-- HTML tags can be used through `tags$name()` function, e.g., `tags$br()`
-- Not covered here: 
-  - **Dynamic **UI makes it possible to change UI as a function of input values
-
-
-
-
+  - output จะถูกส่งมาจากส่วนของ server
+- ทั้ง input/output functions จะต้องมี IDs ที่เชื่อมกันกับ server
+- HTML tags สามารถใช้ผ่าน `tags$name()` function ได้ เช่น `tags$br()`
+- ที่ยังไม่พูดถึง: 
+  - **Dynamic **UI  เราสามารถที่เปลี่ยน UI ได้เหมือนเป็น function ของ inputs เลย
 
 
 
